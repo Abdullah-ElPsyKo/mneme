@@ -1,0 +1,13 @@
+:root {
+  --base: #090f1a;
+  --surface: #111a29;
+  --text: #c0ccdf;
+  --bright: #e0e7f3;
+  --muted: #7c91ae;
+  --accent: #bcb4ef;
+  --line: #6d82a226;
+  --line-soft: #6d82a218;
+  --font: 'Segoe UI Variable', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --mono: 'Cascadia Code', 'Consolas', monospace;
+  color-scheme: dark;
+}

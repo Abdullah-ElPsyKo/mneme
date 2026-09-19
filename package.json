@@ -1,0 +1,53 @@
+{
+  "name": "mneme-second-brain",
+  "version": "0.2.3",
+  "private": true,
+  "type": "module",
+  "description": "A local-first personal memory system",
+  "engines": {
+    "node": ">=24.14.0"
+  },
+  "bin": {
+    "brain": "dist/server/cli.js"
+  },
+  "scripts": {
+    "dev": "tsx server/cli.ts serve --dev",
+    "build": "tsc -p tsconfig.server.json && tsc -p tsconfig.json && vite build",
+    "start": "node dist/server/cli.js serve",
+    "brain": "tsx server/cli.ts",
+    "test": "tsx --test --test-concurrency=1 tests/*.test.ts",
+    "test:e2e": "playwright test",
+    "bench": "tsx scripts/benchmark.ts",
+    "check": "npm run build && npm test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "preview:fixture": "tsx scripts/preview.ts",
+    "desktop:prepare": "node scripts/desktop-prepare.mjs",
+    "desktop:dev": "node scripts/desktop.mjs dev",
+    "desktop:build": "node scripts/desktop.mjs build",
+    "desktop:runtime": "node scripts/desktop-runtime.mjs"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "2.11.1",
+    "@zip.js/zip.js": "^2.15.0",
+    "dompurify": "^3.4.15",
+    "lucide-react": "^1.46.0",
+    "marked": "^18.0.13",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@tauri-apps/cli": "2.11.4",
+    "@types/node": "^22.20.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "prettier": "^3.9.6",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0"
+  }
+}

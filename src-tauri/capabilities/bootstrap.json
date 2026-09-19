@@ -1,0 +1,17 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "bootstrap",
+  "description": "Only trusted bundled startup UI may inspect desktop status or select a brain through a native dialog.",
+  "windows": ["main"],
+  "local": true,
+  "permissions": [
+    "allow-desktop-state",
+    "allow-desktop-choose-brain",
+    "allow-desktop-preferences",
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "allow-desktop-finish-close",
+    "allow-desktop-set-dirty",
+    "allow-desktop-toggle-fullscreen"
+  ]
+}

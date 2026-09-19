@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+.npm-cache/
+
+# Build output
+dist/
+coverage/
+artifacts/
+release/
+.desktop-build/
+
+# Mneme local data
+.brain/
+.test-brains/
+
+# Databases
+*.db
+*.db-wal
+*.db-shm
+*.sqlite*
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Tests
+playwright-report/
+test-results/
+
+# Toolchains
+.toolchains/
+
+# Tauri
+src-tauri/target/
+src-tauri/binaries/
+src-tauri/resources/
+src-tauri/gen/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini

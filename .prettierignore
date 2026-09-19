@@ -1,0 +1,16 @@
+node_modules
+dist
+.brain
+.test-brains
+.npm-cache
+artifacts
+playwright-report
+test-results
+package-lock.json
+.toolchains
+.desktop-build
+src-tauri/target
+src-tauri/resources
+src-tauri/binaries
+src-tauri/gen
+release
