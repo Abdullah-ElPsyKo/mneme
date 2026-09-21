@@ -96,7 +96,7 @@ export class Deletion {
         ? `${endpoints.from_name} → ${endpoints.to_name} (${row.type.replaceAll('_', ' ')})`
         : `${row.type} · ${row.valid_from}`);
     const descriptions: Record<DeletionKind, string> = {
-      memories: `Remove this ${row.type === 'project' ? 'project' : 'memory'} from current views, search and new AI context. End ${relations.length} active connection(s). Related notes, tasks, project labels and original sources stay. Markdown and revision history remain; you can restore a revision from Timeline → Open current memory → History.`,
+      memories: `Remove this ${row.type === 'project' ? 'project' : 'memory'} from current views, search and new AI context. End ${relations.length} active connection(s). Related notes, tasks, project labels and original sources stay. Markdown and revision history remain; browse Notes → Archived and use Restore memory to make it active again.`,
       entities: `Remove this entity from the current graph and end ${relations.length} active connection(s). Related memories and their text stay. Historical graph snapshots and provenance remain.`,
       relationships:
         'End this connection in the current graph. Both endpoints and the historical connection remain.',

@@ -27,6 +27,7 @@ export function Editor({
           type,
           memory_class: 'semantic',
           status: 'active',
+          project_state: type === 'project' ? 'planned' : null,
           tags: [],
           project: '',
           importance: 0.5,
@@ -42,7 +43,13 @@ export function Editor({
     [confirmClose, setConfirmClose] = useState(false);
   useDesktopDraft(dirty || busy);
   const change = (key: string, value: any) => {
-    setDraft((current: any) => ({ ...current, [key]: value }));
+    setDraft((current: any) => ({
+      ...current,
+      [key]: value,
+      ...(key === 'type'
+        ? { project_state: value === 'project' ? current.project_state || 'planned' : null }
+        : {}),
+    }));
     setDirty(true);
   };
   const save = async () => {
@@ -145,6 +152,24 @@ export function Editor({
               onChange={(e) => change('project', e.target.value)}
             />
           </label>
+          {draft.type === 'project' && (
+            <label>
+              Project lifecycle
+              <select
+                aria-label="Project lifecycle"
+                value={draft.project_state || 'planned'}
+                onChange={(e) => change('project_state', e.target.value)}
+              >
+                {['planned', 'active', 'paused', 'completed', 'abandoned'].map((state) => (
+                  <option key={state}>{state}</option>
+                ))}
+              </select>
+              <small>
+                Planned: not started · Active: current work · Paused: on hold · Completed: finished ·
+                Abandoned: discontinued
+              </small>
+            </label>
+          )}
           <label>
             Tags
             <input
@@ -157,14 +182,21 @@ export function Editor({
             />
           </label>
           <label>
-            Status
+            {draft.type === 'project' ? 'Memory visibility' : 'Status'}
             <select
               aria-label="Memory status"
               value={draft.status}
               onChange={(e) => change('status', e.target.value)}
             >
-              {['active', 'inbox', 'completed', 'archived'].map((t) => (
-                <option key={t}>{t}</option>
+              {[
+                'active',
+                'inbox',
+                ...(draft.type !== 'project' || draft.status === 'completed' ? ['completed'] : []),
+                'archived',
+              ].map((t) => (
+                <option key={t} value={t}>
+                  {draft.type === 'project' && ['active', 'completed'].includes(t) ? 'Visible' : t}
+                </option>
               ))}
             </select>
           </label>

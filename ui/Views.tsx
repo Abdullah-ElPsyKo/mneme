@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DeleteAction } from './DeleteAction';
+import { MemoryFilterControls, emptyFilters, useMemoryPage } from './MemoryFilters';
 import {
   Search,
   Plus,
@@ -14,6 +15,7 @@ import {
   History,
   CheckCheck,
   Link2,
+  Pencil,
 } from 'lucide-react';
 import {
   api,
@@ -43,52 +45,34 @@ export function MemoryList({
   onCreate: (type: string) => void;
   revision: number;
 }) {
-  const [items, setItems] = useState<any[]>([]),
-    [query, setQuery] = useState(''),
-    [error, setError] = useState(''),
-    [loading, setLoading] = useState(true),
+  const [query, setQuery] = useState(''),
+    [filters, setFilters] = useState(emptyFilters),
+    [archived, setArchived] = useState(false),
     [offset, setOffset] = useState(0);
+  const projects = view === 'Projects';
   useEffect(() => {
     setOffset(0);
-  }, [view, query]);
-  useEffect(() => {
-    let live = true;
-    setLoading(true);
-    const timer = setTimeout(
-      () => {
-        const path = query
-          ? `/search?q=${encodeURIComponent((view === 'Projects' ? 'type:project ' : '') + query)}&limit=60&offset=${offset}`
-          : `/memories?limit=60&offset=${offset}${view === 'Projects' ? '&type=project' : ''}`;
-        api(path)
-          .then((data) => {
-            if (live) {
-              setItems(
-                query
-                  ? data.hits.map((h: any) => ({ ...h.memory, signals: h.signals, excerpt: h.excerpt }))
-                  : data,
-              );
-              setError('');
-            }
-          })
-          .catch((e) => live && setError(e.message))
-          .finally(() => live && setLoading(false));
-      },
-      query ? 140 : 0,
-    );
-    return () => {
-      live = false;
-      clearTimeout(timer);
-    };
-  }, [view, query, revision, offset]);
-  const projects = view === 'Projects';
+    setFilters(emptyFilters);
+    setQuery('');
+    setArchived(false);
+  }, [view]);
+  const { items, loading, error } = useMemoryPage(
+    revision,
+    query,
+    filters,
+    offset,
+    projects ? 'project' : '',
+    archived ? 'archived' : '',
+  );
+  const filtered = !!query || Object.values(filters).some(Boolean);
   return (
     <div className="view-scroll">
       <SectionTitle
-        eyebrow={projects ? 'What you are building' : 'Your growing body of knowledge'}
+        eyebrow={projects ? 'Current work, plans & history' : 'Your growing body of knowledge'}
         title={projects ? 'Projects' : 'Notes & memories'}
         description={
           projects
-            ? 'Keep the decisions, details, and direction together.'
+            ? 'Follow projects from first plans to completion, keeping their decisions and history together.'
             : 'A place for the things you don’t want to lose.'
         }
         actions={
@@ -98,31 +82,99 @@ export function MemoryList({
           </button>
         }
       />
+      <div className="tabs" aria-label="Memory archive scope">
+        <button
+          className={!archived ? 'active' : ''}
+          onClick={() => {
+            setArchived(false);
+            setOffset(0);
+          }}
+        >
+          {projects ? 'All projects' : 'Active memories'}
+        </button>
+        <button
+          className={archived ? 'active' : ''}
+          onClick={() => {
+            setArchived(true);
+            setFilters({ ...filters, status: '' });
+            setOffset(0);
+          }}
+        >
+          Archived
+        </button>
+      </div>
+      {archived && (
+        <p className="muted">
+          Archived memories are retained and excluded from normal retrieval. Open one to restore it.
+        </p>
+      )}
+      {projects && (
+        <label className="project-lifecycle-filter">
+          Project lifecycle
+          <select
+            aria-label="Filter project lifecycle"
+            value={filters.project_state}
+            onChange={(e) => {
+              setFilters({ ...filters, project_state: e.target.value });
+              setOffset(0);
+            }}
+          >
+            <option value="">All lifecycle states</option>
+            <option value="active">Active · current work</option>
+            <option value="planned">Planned · roadmap</option>
+            <option value="paused">Paused · on hold</option>
+            <option value="completed">Completed · history</option>
+            <option value="abandoned">Abandoned · history</option>
+          </select>
+        </label>
+      )}
       <div className="filter-bar">
         <Search size={17} />
         <input
           aria-label={projects ? 'Filter projects' : 'Filter notes'}
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={projects ? 'Find a project…' : 'Filter by words, tag: or type:…'}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setOffset(0);
+          }}
+          placeholder={
+            archived
+              ? 'Find an archived title…'
+              : projects
+                ? 'Find a project…'
+                : 'Filter by words, tag: or type:…'
+          }
         />
         <span>{loading ? 'Searching…' : `${items.length}${items.length === 60 ? '+' : ''} memories`}</span>
       </div>
+      <MemoryFilterControls
+        value={filters}
+        onChange={(next) => {
+          setFilters(next);
+          setOffset(0);
+        }}
+        fixedType={projects ? 'project' : ''}
+        fixedStatus={archived ? 'archived' : projects ? 'visible' : ''}
+      />
       {error && <div className="error-banner">{error}</div>}
       {!loading && !items.length ? (
         <Empty
           icon={projects ? <FolderOpen size={28} /> : <FileText size={28} />}
           title={
-            query
+            filtered
               ? 'Nothing here matches yet'
-              : projects
-                ? 'Give your next project a home'
-                : 'A clear space for your knowledge'
+              : archived
+                ? 'No archived memories'
+                : projects
+                  ? 'Give your next project a home'
+                  : 'A clear space for your knowledge'
           }
           text={
-            query
+            filtered
               ? 'Try another phrase or remove a filter.'
-              : 'Create a memory or import a file. Your original evidence and every revision stay with you.'
+              : archived
+                ? 'Memories you archive will appear here.'
+                : 'Create a memory or import a file. Your original evidence and every revision stay with you.'
           }
           action={
             <button onClick={() => onCreate(projects ? 'project' : 'note')}>
@@ -158,7 +210,10 @@ export function MemoryList({
                 </div>
               </div>
               <div className="memory-row-end">
-                <span className={`state-label ${m.status}`}>{m.status}</span>
+                <span className={`state-label ${m.type === 'project' ? m.project_state : m.status}`}>
+                  {m.type === 'project' ? m.project_state : m.status}
+                </span>
+                {m.type === 'project' && m.status === 'archived' && <small>Archived</small>}
                 <small>{date(m.updated_at)}</small>
               </div>
               <ArrowUpRight size={17} />
@@ -313,18 +368,36 @@ export function Timeline({
     [before, setBefore] = useState(''),
     [after, setAfter] = useState(''),
     [offset, setOffset] = useState(0),
+    [loading, setLoading] = useState(true),
     [error, setError] = useState(''),
     [selected, setSelected] = useState<any>();
   useEffect(() => {
     setSelected(undefined);
   }, [revision]);
+  const timelineParams = new URLSearchParams({ timezone: Intl.DateTimeFormat().resolvedOptions().timeZone });
+  if (before) timelineParams.set('before', new Date(before + 'T23:59:59.999').toISOString());
+  if (after) timelineParams.set('after', new Date(after + 'T00:00:00').toISOString());
+  const timelineQuery = timelineParams.toString();
   useEffect(() => {
-    api(
-      `/events?limit=80&offset=${offset}${before ? `&before=${new Date(before + 'T23:59:59').toISOString()}` : ''}${after ? `&after=${new Date(after).toISOString()}` : ''}`,
-    )
-      .then(setEvents)
-      .catch((e) => setError(e.message));
-  }, [revision, before, after, offset]);
+    let live = true;
+    setLoading(true);
+    api('/timeline?' + timelineQuery + '&limit=80&offset=' + offset)
+      .then((items) => {
+        if (live) {
+          setEvents(items);
+          setError('');
+        }
+      })
+      .catch((e) => {
+        if (live) setError(e.message);
+      })
+      .finally(() => {
+        if (live) setLoading(false);
+      });
+    return () => {
+      live = false;
+    };
+  }, [revision, timelineQuery, offset]);
   return (
     <div className="view-scroll">
       <SectionTitle
@@ -359,7 +432,8 @@ export function Timeline({
         </label>
       </div>
       {error && <p className="error-banner">{error}</p>}
-      {!events.length && (
+      {loading && <p role="status">Loading history…</p>}
+      {!loading && !events.length && (
         <Empty
           icon={<History size={28} />}
           title="Your history starts here"
@@ -367,34 +441,23 @@ export function Timeline({
         />
       )}
       <div className="timeline">
-        {events.map((event, index) => {
-          const value = event.payload.memory || event.payload.task || event.payload.entity;
-          return (
-            <div key={event.id}>
-              {(index === 0 || date(event.at) !== date(events[index - 1].at)) && (
-                <h3 className="timeline-date">{date(event.at)}</h3>
-              )}
-              <button className="timeline-event" onClick={() => setSelected(event)}>
-                <div className="timeline-dot" />
-                <time>{time(event.at)}</time>
-                <div>
-                  <span className="row-eyebrow">{pretty(event.kind.replace('.', ' '))}</span>
-                  <h4>
-                    {value?.title ||
-                      value?.name ||
-                      event.payload.relationship?.type ||
-                      event.kind.split('.')[0]}
-                  </h4>
-                  <p>
-                    {event.actor} · {event.provenance.kind}
-                    {value?.version ? ` · revision ${value.version}` : ''}
-                  </p>
-                </div>
-                <ArrowUpRight size={15} />
-              </button>
-            </div>
-          );
-        })}
+        {events.map((event, index) => (
+          <div key={event.id}>
+            {(index === 0 || event.day !== events[index - 1].day) && (
+              <h3 className="timeline-date">{date(event.at)}</h3>
+            )}
+            {event.count > 1 ? (
+              <TimelineGroup
+                key={event.id + ':' + revision}
+                event={event}
+                query={timelineQuery}
+                onSelect={setSelected}
+              />
+            ) : (
+              <TimelineEvent event={event} onSelect={setSelected} />
+            )}
+          </div>
+        ))}
       </div>
       <Pagination offset={offset} count={events.length} size={80} onChange={setOffset} />
       {selected && (
@@ -406,6 +469,9 @@ export function Timeline({
             {selected.payload.memory ? (
               <>
                 <h1>{selected.payload.memory.title}</h1>
+                {selected.payload.memory.project_state && (
+                  <p>Project lifecycle: {selected.payload.memory.project_state}</p>
+                )}
                 <Markdown text={selected.payload.memory.body} />
               </>
             ) : (
@@ -456,6 +522,92 @@ export function Timeline({
     </div>
   );
 }
+function TimelineEvent({ event, onSelect }: { event: any; onSelect: (event: any) => void }) {
+  const value = event.payload.memory || event.payload.task || event.payload.entity;
+  return (
+    <button className="timeline-event" onClick={() => onSelect(event)}>
+      <div className="timeline-dot" />
+      <time>{time(event.at)}</time>
+      <div>
+        <span className="row-eyebrow">{pretty(event.kind.replace('.', ' '))}</span>
+        <h4>{value?.title || value?.name || event.payload.relationship?.type || event.kind.split('.')[0]}</h4>
+        <p>
+          {event.actor} · {event.provenance.kind}
+          {value?.version ? ' · revision ' + value.version : ''}
+        </p>
+      </div>
+      <ArrowUpRight size={15} />
+    </button>
+  );
+}
+function TimelineGroup({
+  event,
+  query,
+  onSelect,
+}: {
+  event: any;
+  query: string;
+  onSelect: (event: any) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [events, setEvents] = useState<any[]>([]);
+  const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  useEffect(() => {
+    if (!open) return;
+    let live = true;
+    setLoading(true);
+    setError('');
+    api(
+      '/timeline?' +
+        query +
+        '&aggregate=' +
+        event.aggregate_id +
+        '&day=' +
+        event.day +
+        '&limit=80&offset=' +
+        offset,
+    )
+      .then((items) => {
+        if (live) setEvents(items);
+      })
+      .catch((e) => {
+        if (live) setError(e.message);
+      })
+      .finally(() => {
+        if (live) setLoading(false);
+      });
+    return () => {
+      live = false;
+    };
+  }, [open, offset, query, event.aggregate_id, event.day]);
+  return (
+    <details className="timeline-group" open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>
+      <summary>
+        <strong>{event.payload.memory?.title || 'Memory activity'}</strong>
+        <span>
+          {event.count} events · latest {time(event.at)}
+        </span>
+      </summary>
+      {loading ? (
+        <p role="status">Loading events…</p>
+      ) : (
+        <>
+          {error && (
+            <p role="alert" className="error-banner">
+              {error}
+            </p>
+          )}
+          {events.map((item) => (
+            <TimelineEvent key={item.id} event={item} onSelect={onSelect} />
+          ))}
+          <Pagination offset={offset} count={events.length} size={80} onChange={setOffset} />
+        </>
+      )}
+    </details>
+  );
+}
 export function Tasks({
   revision,
   refresh,
@@ -470,6 +622,7 @@ export function Tasks({
     [due, setDue] = useState(''),
     [project, setProject] = useState(''),
     [filter, setFilter] = useState(''),
+    [editingTask, setEditingTask] = useState<any>(),
     [busy, setBusy] = useState(false);
   useEffect(() => {
     api(`/tasks?limit=200${filter ? `&status=${filter}` : ''}`)
@@ -556,6 +709,17 @@ export function Tasks({
           text="Add a next step when you need one. Your completed tasks stay in history."
         />
       )}
+      {editingTask && (
+        <TaskEditor
+          task={editingTask}
+          onCancel={() => setEditingTask(undefined)}
+          onSaved={() => {
+            setEditingTask(undefined);
+            refresh();
+            notify('Task updated');
+          }}
+        />
+      )}
       {tasks.map((task) => (
         <div className={`task-row ${task.status}`} key={task.id}>
           <button
@@ -592,10 +756,103 @@ export function Tasks({
               <option key={s}>{s}</option>
             ))}
           </select>
+          <button
+            className="icon-button"
+            aria-label={`Edit task: ${task.title}`}
+            onClick={() => setEditingTask(task)}
+          >
+            <Pencil size={15} />
+          </button>
           <DeleteAction kind="tasks" id={task.id} title={task.title} onDeleted={refresh} />
         </div>
       ))}
     </div>
+  );
+}
+function TaskEditor({ task, onCancel, onSaved }: { task: any; onCancel: () => void; onSaved: () => void }) {
+  const [draft, setDraft] = useState(task);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  useEffect(() => {
+    setDraft(task);
+    setError('');
+  }, [task]);
+  return (
+    <form
+      className="task-editor form-stack"
+      aria-label="Edit task"
+      onSubmit={async (event) => {
+        event.preventDefault();
+        setBusy(true);
+        setError('');
+        const { id, created_at, updated_at, version, ...data } = draft;
+        try {
+          await put(`/tasks/${id}`, { ...data, expected_version: version });
+          onSaved();
+        } catch (e) {
+          setError((e as Error).message);
+        } finally {
+          setBusy(false);
+        }
+      }}
+    >
+      <label>
+        Task content
+        <input
+          autoFocus
+          aria-label="Edit task content"
+          required
+          maxLength={500}
+          value={draft.title}
+          onChange={(e) => setDraft({ ...draft, title: e.target.value })}
+        />
+      </label>
+      <div className="task-capture-details">
+        <label>
+          Project
+          <input
+            aria-label="Edit task project"
+            maxLength={240}
+            value={draft.project}
+            onChange={(e) => setDraft({ ...draft, project: e.target.value })}
+          />
+        </label>
+        <label>
+          Due date
+          <input
+            aria-label="Edit task due date"
+            type="date"
+            value={draft.due_at || ''}
+            onChange={(e) => setDraft({ ...draft, due_at: e.target.value || null })}
+          />
+        </label>
+        <label>
+          Status
+          <select
+            aria-label="Edit task status"
+            value={draft.status}
+            onChange={(e) => setDraft({ ...draft, status: e.target.value })}
+          >
+            {['open', 'doing', 'done', 'cancelled'].map((s) => (
+              <option key={s}>{s}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+      {error && (
+        <p className="error-banner" role="alert">
+          {error}
+        </p>
+      )}
+      <div className="button-row">
+        <button type="button" disabled={busy} onClick={onCancel}>
+          Cancel edit
+        </button>
+        <button className="primary" disabled={busy || !draft.title.trim()}>
+          Save task
+        </button>
+      </div>
+    </form>
   );
 }
 export function InboxView({
@@ -611,18 +868,26 @@ export function InboxView({
   onEdit: (m: any) => void;
   notify: (text: string, error?: boolean) => void;
 }) {
-  const [memories, setMemories] = useState<any[]>([]),
-    [proposals, setProposals] = useState<any[]>([]),
+  const [proposals, setProposals] = useState<any[]>([]),
     [tab, setTab] = useState('Captures'),
     [editing, setEditing] = useState<any>(),
-    [json, setJson] = useState('');
+    [json, setJson] = useState(''),
+    [query, setQuery] = useState(''),
+    [filters, setFilters] = useState(emptyFilters),
+    [offset, setOffset] = useState(0);
+  const { items: memories, loading, error } = useMemoryPage(revision, query, filters, offset, '', 'inbox');
   useEffect(() => {
-    Promise.all([api('/memories?status=inbox'), api('/proposals')])
-      .then(([m, p]) => {
-        setMemories(m);
-        setProposals(p);
+    let live = true;
+    api('/proposals')
+      .then((p) => {
+        if (live) setProposals(p);
       })
-      .catch((e) => notify(e.message, true));
+      .catch((e) => {
+        if (live) notify(e.message, true);
+      });
+    return () => {
+      live = false;
+    };
   }, [revision]);
   const resolve = async (id: string, action: string, edited?: any) => {
     try {
@@ -666,11 +931,39 @@ export function InboxView({
       </div>
       {tab === 'Captures' ? (
         <>
-          {!memories.length && (
+          <div className="filter-bar">
+            <Search size={17} />
+            <input
+              aria-label="Filter inbox"
+              placeholder="Find a capture…"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setOffset(0);
+              }}
+            />
+            <span role="status">
+              {loading ? 'Searching…' : memories.length + (memories.length === 60 ? '+' : '') + ' captures'}
+            </span>
+          </div>
+          <MemoryFilterControls
+            value={filters}
+            onChange={(next) => {
+              setFilters(next);
+              setOffset(0);
+            }}
+            fixedStatus="inbox"
+          />
+          {error && <p className="error-banner">{error}</p>}
+          {!loading && !memories.length && (
             <Empty
               icon={<Inbox size={30} />}
-              title="A little breathing room"
-              text="Quick captures and imported files land here. Review them when you’re ready."
+              title={
+                query || Object.values(filters).some(Boolean)
+                  ? 'No captures match these filters'
+                  : 'A little breathing room'
+              }
+              text="Quick captures and imported files land here. Clear filters to see more captures."
             />
           )}
           {memories.map((m) => (
@@ -703,6 +996,7 @@ export function InboxView({
               </div>
             </div>
           ))}
+          <Pagination offset={offset} count={memories.length} size={60} onChange={setOffset} />
         </>
       ) : (
         <>

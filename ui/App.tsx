@@ -476,7 +476,6 @@ export function App() {
           <Inspector
             key={`${selected}:${revision}`}
             id={selected}
-            graph={graph}
             onClose={() => setSelected(undefined)}
             onEdit={(memory) => setEditor({ memory })}
             onSelect={select}

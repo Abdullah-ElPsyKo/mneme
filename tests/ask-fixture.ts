@@ -4,6 +4,7 @@ export function askFixture(brain: Brain) {
     title: 'FORGELINE enterprise homelab',
     type: 'project',
     status: 'active',
+    project_state: 'active',
     project: 'FORGELINE',
     body: 'FORGELINE is your enterprise homelab for practicing identity, networking and resilient infrastructure.',
   });

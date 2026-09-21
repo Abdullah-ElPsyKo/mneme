@@ -1,6 +1,13 @@
 import { existsSync, readFileSync, readdirSync, statSync, unlinkSync } from 'node:fs';
 import { relative } from 'node:path';
-import { memorySchema, AppError, type Memory, type MemoryInput, type Provenance } from '../core/types.js';
+import {
+  memorySchema,
+  projectState,
+  AppError,
+  type Memory,
+  type MemoryInput,
+  type Provenance,
+} from '../core/types.js';
 import { atomicWrite, hash, id, inside, now, parse } from '../core/util.js';
 import type { Storage } from '../storage/database.js';
 import { Events } from '../events/events.js';
@@ -24,6 +31,7 @@ export class Memories {
       tags: parse(row.tags),
       provenance: parse(row.provenance),
       private: !!row.private,
+      project_state: projectState(row),
       body,
     };
   }
@@ -51,7 +59,7 @@ export class Memories {
           )
           .get(memoryId);
         if (!latest) throw new AppError(500, 'Missing canonical memory and recovery history');
-        return this.normalize(parse(latest.payload).memory);
+        return this.normalize({ ...parse(latest.payload).memory, project_state: row.project_state });
       }
       text = readFileSync(path, 'utf8');
       if (hash(text) !== row.content_hash) {
@@ -61,7 +69,8 @@ export class Memories {
             "SELECT payload FROM events WHERE aggregate_id=? AND kind IN ('memory.created','memory.updated','memory.archived') ORDER BY seq DESC LIMIT 1",
           )
           .get(memoryId);
-        if (latest) return this.normalize(parse(latest.payload).memory);
+        if (latest)
+          return this.normalize({ ...parse(latest.payload).memory, project_state: row.project_state });
       }
     }
     return this.decode(row, readMarkdown(text).body);
@@ -69,6 +78,7 @@ export class Memories {
   normalize(memory: Memory): Memory {
     return {
       ...memory,
+      project_state: projectState(memory),
       facts: memory.facts ?? (memory.fact_key ? [{ key: memory.fact_key, value: memory.fact_value }] : []),
     };
   }
@@ -77,6 +87,10 @@ export class Memories {
       type?: string;
       status?: string;
       project?: string;
+      project_state?: string;
+      memory_class?: string;
+      tag?: string;
+      q?: string;
       limit?: number;
       offset?: number;
       includeArchived?: boolean;
@@ -88,13 +102,29 @@ export class Memories {
       where.push('type=?');
       args.push(options.type);
     }
+    if (options.project_state) {
+      where.push("type='project' AND project_state=?");
+      args.push(options.project_state);
+    }
     if (options.status) {
       where.push('status=?');
       args.push(options.status);
     } else if (!options.includeArchived) where.push("status!='archived'");
     if (options.project) {
-      where.push('project=? COLLATE NOCASE');
-      args.push(options.project);
+      where.push("(project=? COLLATE NOCASE OR (type='project' AND title=? COLLATE NOCASE))");
+      args.push(options.project, options.project);
+    }
+    if (options.memory_class) {
+      where.push('memory_class=?');
+      args.push(options.memory_class);
+    }
+    if (options.tag) {
+      where.push('EXISTS (SELECT 1 FROM json_each(memories.tags) WHERE value=? COLLATE NOCASE)');
+      args.push(options.tag);
+    }
+    if (options.q) {
+      where.push("title LIKE ? ESCAPE '\\'");
+      args.push('%' + options.q.replace(/[\\%_]/g, '\\$&') + '%');
     }
     return this.storage.db
       .prepare(
@@ -128,6 +158,15 @@ export class Memories {
     const timestamp = now();
     const memory: Memory = {
       ...data,
+      project_state:
+        data.type === 'project'
+          ? (data.project_state ??
+            (old?.type === 'project'
+              ? projectState(old)
+              : data.status === 'completed'
+                ? 'completed'
+                : 'planned'))
+          : null,
       id: old?.id || id(),
       created_at: old?.created_at || timestamp,
       updated_at: timestamp,
@@ -175,6 +214,7 @@ export class Memories {
         'type',
         'memory_class',
         'status',
+        'project_state',
         'project',
         'tags',
         'importance',

@@ -2,7 +2,7 @@
 
 ## Windows user workflow
 
-Install `Mneme_0.2.3_x64-setup.exe` and launch Mneme from Start. The x64 per-user installation includes `Mneme.exe`, a pinned Node runtime named `mneme-core.exe`, compiled core/UI resources, production dependencies, and the Node license. No Node/npm installation is required. A missing WebView2 runtime is installed using Microsoft's official embedded bootstrapper; that bootstrapper downloads the runtime. Existing WebView2 installations work offline.
+Install `Mneme_0.3.0_x64-setup.exe` and launch Mneme from Start. The x64 per-user installation includes `Mneme.exe`, a pinned Node runtime named `mneme-core.exe`, compiled core/UI resources, production dependencies, and the Node license. No Node/npm installation is required. A missing WebView2 runtime is installed using Microsoft's official embedded bootstrapper; that bootstrapper downloads the runtime. Existing WebView2 installations work offline.
 
 Choose the recommended `%LOCALAPPDATA%\MnemeBrains\Default`, another empty directory, or a folder containing `database/brain.db`. Selection never moves, imports, or deletes a brain. The current engine opens its existing Markdown, SQLite, originals, indexes and configuration directly. An unavailable drive or a brain owned by another process produces an error and a choice to reopen or select a different brain.
 
@@ -40,7 +40,7 @@ npm run desktop:build
 
 The runtime script downloads Node 24.18.0 from nodejs.org, verifies a reviewed SHA-256 pin, and obtains its license from the matching official tag. `desktop:prepare` verifies the runtime again, builds existing TypeScript/React assets, installs only locked backend dependencies with lifecycle scripts disabled, and stages resources. `desktop.mjs` uses system Rust or the optional workspace-local `.toolchains/cargo` and `.toolchains/rustup` installed during this conversion. It normalizes Windows PATH casing without modifying the user's permanent PATH.
 
-Installer output: `src-tauri/target/release/bundle/nsis/Mneme_0.2.3_x64-setup.exe`. The complete application directory is `src-tauri/target/release` (the main executable alone needs its companion runtime/resources). Application icons are generated from the existing `ui/public/mark.svg` using the Tauri icon tool.
+Installer output: `src-tauri/target/release/bundle/nsis/Mneme_0.3.0_x64-setup.exe`. The complete application directory is `src-tauri/target/release` (the main executable alone needs its companion runtime/resources). Application icons are generated from the existing `ui/public/mark.svg` using the Tauri icon tool.
 
 ```powershell
 npm run check

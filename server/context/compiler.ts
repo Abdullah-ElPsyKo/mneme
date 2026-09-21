@@ -1,4 +1,4 @@
-import type { SearchHit } from '../core/types.js';
+import { projectState, type SearchHit, type ProjectState } from '../core/types.js';
 import { tokens } from '../core/util.js';
 export type ContextPackage = {
   query: string;
@@ -11,6 +11,7 @@ export type ContextPackage = {
     type: string;
     memory_class: string;
     status: string;
+    project_state?: ProjectState | null;
     project: string;
     valid_from: string;
     valid_until: string | null;
@@ -71,7 +72,11 @@ export function compileContext(
     if (m.status === 'archived') omit = 'deleted memory excluded';
     else if (m.private) omit = 'private memory excluded';
     else if (superseded.has(m.id)) omit = 'explicitly superseded';
-    else if (seen.has(JSON.stringify([m.title, m.body.trim(), m.facts, m.type, m.status, m.project])))
+    else if (
+      seen.has(
+        JSON.stringify([m.title, m.body.trim(), m.facts, m.type, m.status, m.project, projectState(m)]),
+      )
+    )
       omit = 'duplicate evidence';
     if (omit) {
       result.omitted.push({ id: m.id, reason: omit });
@@ -83,7 +88,8 @@ export function compileContext(
       title: m.title,
       type: m.type,
       memory_class: m.memory_class,
-      status: m.status,
+      status: projectState(m) || m.status,
+      ...(m.type === 'project' ? { project_state: projectState(m) } : {}),
       project: m.project,
       valid_from: m.valid_from!,
       valid_until: m.valid_until,
@@ -110,7 +116,7 @@ export function compileContext(
         continue;
       }
     }
-    seen.add(JSON.stringify([m.title, m.body.trim(), m.facts, m.type, m.status, m.project]));
+    seen.add(JSON.stringify([m.title, m.body.trim(), m.facts, m.type, m.status, m.project, projectState(m)]));
     for (const fact of m.facts ?? (m.fact_key ? [{ key: m.fact_key, value: m.fact_value }] : [])) {
       const entry = facts.get(fact.key) || { values: new Set<string>(), memories: [] };
       entry.values.add(fact.value);

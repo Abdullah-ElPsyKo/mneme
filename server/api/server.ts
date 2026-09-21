@@ -174,7 +174,11 @@ export async function serve(brain: Brain, options: { port?: number; dev?: boolea
               ...paging,
               type: query.type,
               status: query.status,
+              project_state: query.project_state,
               project: query.project,
+              memory_class: query.memory_class,
+              tag: query.tag,
+              q: query.q?.slice(0, 240),
               includeArchived: query.archived === 'true',
             }),
           );
@@ -221,8 +225,12 @@ export async function serve(brain: Brain, options: { port?: number; dev?: boolea
             201,
           );
         }
-        if (path === '/api/search' && method === 'GET')
-          return json(res, { hits: brain.search.query(query.q || '', paging) });
+        if (path === '/api/search' && method === 'GET') {
+          const filters: Record<string, string> = {};
+          for (const key of ['type', 'project', 'class', 'status', 'tag', 'project_state'])
+            if (query[key]) filters[key] = z.string().max(240).parse(query[key]);
+          return json(res, { hits: brain.search.query(query.q || '', { ...paging, filters }) });
+        }
         if (path === '/api/ask' && method === 'POST') {
           const data = askSchema.parse(await body(req));
           return json(
@@ -329,6 +337,18 @@ export async function serve(brain: Brain, options: { port?: number; dev?: boolea
               at: query.at ? z.string().datetime().parse(query.at) : undefined,
             }),
           );
+        if (path === '/api/connection-options' && method === 'GET')
+          return json(
+            res,
+            brain.graph.connectionOptions(
+              z
+                .string()
+                .max(240)
+                .parse(query.q || ''),
+              query.exclude || '',
+              paging.offset,
+            ),
+          );
         const entity = path.match(/^\/api\/entities\/([\w-]+)$/);
         if (entity && method === 'GET') return json(res, brain.graph.inspect(entity[1]));
         if (path === '/api/entities' && method === 'POST')
@@ -339,6 +359,28 @@ export async function serve(brain: Brain, options: { port?: number; dev?: boolea
         if (relation && method === 'DELETE') {
           brain.deletion.remove('relationships', relation[1], await body(req));
           return json(res, { ok: true });
+        }
+        if (path === '/api/timeline' && method === 'GET') {
+          const timezone = z
+            .string()
+            .max(100)
+            .parse(query.timezone || 'UTC');
+          try {
+            new Intl.DateTimeFormat('en', { timeZone: timezone });
+          } catch {
+            throw new AppError(400, 'Invalid timeline timezone');
+          }
+          return json(
+            res,
+            brain.memories.events.timeline({
+              ...paging,
+              timezone,
+              before: query.before ? z.string().datetime().parse(query.before) : undefined,
+              after: query.after ? z.string().datetime().parse(query.after) : undefined,
+              aggregate: query.aggregate ? z.string().uuid().parse(query.aggregate) : undefined,
+              day: query.aggregate ? z.string().date().parse(query.day) : undefined,
+            }),
+          );
         }
         if (path === '/api/events' && method === 'GET')
           return json(

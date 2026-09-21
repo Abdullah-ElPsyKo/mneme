@@ -33,6 +33,15 @@ One durable bounded queue uses event-driven wakeups, retry backoff, crash recove
 
 ## Presentation
 
+Projects have a separate `project_state` lifecycle: planned, active, paused,
+completed, abandoned. Memory status still governs inbox/archive visibility. A
+lifecycle edit uses the existing memory transaction, event and outbox path, changes
+only that project, and preserves label-based associations and independent child
+memory/task statuses. The Projects view combines lifecycle filtering with existing
+metadata queries. Planned is the creation default; only lifecycle-active projects
+represent current work in project overview retrieval. Schema 6 derives conservative
+legacy defaults without rewriting canonical Markdown or past events.
+
 The primary space is a stable, clustered canvas graph of real entities and relationships. Overview clusters derive from entity types. Zoom progressively reveals members; focus isolates actual neighbors. A right-hand inspector and Ask pane retain graph context. Notes, projects, timeline, inbox, tasks, sources, and settings share reusable typography, surfaces, controls, and keyboard behavior. Empty brains stay empty until the user captures or imports information.
 
 ## Verification

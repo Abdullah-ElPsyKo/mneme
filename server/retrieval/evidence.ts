@@ -1,4 +1,4 @@
-import type { Memory, SearchHit } from '../core/types.js';
+import { projectState, projectStates, type Memory, type SearchHit } from '../core/types.js';
 import { parseQuery } from './search.js';
 
 const stop = new Set(
@@ -27,6 +27,8 @@ const forms: Record<string, string> = {
   complete: 'completed',
   finished: 'completed',
   done: 'completed',
+  planning: 'planned',
+  discontinued: 'abandoned',
   actively: 'active',
   working: 'active',
   work: 'active',
@@ -63,6 +65,12 @@ export function askIntent(query: string) {
     'project',
     'active',
     'completed',
+    'planned',
+    'paused',
+    'abandoned',
+    'roadmap',
+    'history',
+    'lifecycle',
     'status',
     'which',
     'list',
@@ -84,7 +92,7 @@ export function factText(memory: Memory) {
   return (memory.facts || []).map((f) => `${f.key.replace(/[._-]/g, ' ')}: ${f.value}`).join('\n');
 }
 export function embeddingText(memory: Memory) {
-  return `${memory.title}\n${memory.type} · ${memory.status} · ${memory.project}\n${memory.body}\n${factText(memory)}`;
+  return `${memory.title}\n${memory.type} · ${projectState(memory) || memory.status} · ${memory.project}\n${memory.body}\n${factText(memory)}`;
 }
 
 // Candidate rank is deliberately not a relevance threshold: RRF, age, authority and
@@ -93,11 +101,17 @@ export function selectEvidence(query: string, candidates: SearchHit[]) {
   const parsed = parseQuery(query),
     intent = askIntent(query),
     words = intent.words;
+  const requestedStates = projectStates.filter((state) => words.includes(state));
+  const lifecycleMatches = (memory: Memory) =>
+    !intent.projects ||
+    requestedStates.length !== 1 ||
+    memory.type !== 'project' ||
+    projectState(memory) === requestedStates[0];
   const documents = candidates.map((hit) => ({
     hit,
     words: new Set(
       terms(
-        `${hit.memory.title} ${hit.memory.body} ${hit.memory.project} ${hit.memory.type} ${hit.memory.status} ${hit.memory.tags.join(' ')} ${factText(hit.memory)} ${(
+        `${hit.memory.title} ${hit.memory.body} ${hit.memory.project} ${hit.memory.type} ${projectState(hit.memory) || hit.memory.status} ${hit.memory.tags.join(' ')} ${factText(hit.memory)} ${(
           hit.graph_links || []
         )
           .filter((link) =>
@@ -141,6 +155,10 @@ export function selectEvidence(query: string, candidates: SearchHit[]) {
     omitted: { id: string; reason: string }[] = [];
   for (const document of documents) {
     const { hit } = document;
+    if (!lifecycleMatches(hit.memory)) {
+      omitted.push({ id: hit.memory.id, reason: 'project lifecycle does not match requested work' });
+      continue;
+    }
     const coverage =
       words.reduce((sum, word) => sum + (document.words.has(word) ? weights.get(word)! : 0), 0) / total;
     const header = words.filter((w) => document.header.has(w)).length / Math.max(1, words.length);
@@ -174,6 +192,7 @@ export function selectEvidence(query: string, candidates: SearchHit[]) {
   for (const { hit } of documents)
     if (
       !accepted.some((a) => a.hit.memory.id === hit.memory.id) &&
+      lifecycleMatches(hit.memory) &&
       (hit.memory.facts || []).some((f) => keys.has(f.key))
     ) {
       accepted.push({ hit, relevance: 1 });

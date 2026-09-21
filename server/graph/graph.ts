@@ -47,6 +47,21 @@ export class Graph {
     });
     return entity;
   }
+  connectionOptions(query = '', exclude = '', offset = 0) {
+    // Same eligibility as link(): local manual selection includes private memories.
+    const text = '%' + query.replace(/[\\%_]/g, '\\$&') + '%';
+    return this.storage.db
+      .prepare(
+        `
+      SELECT e.id,e.name,e.type,m.project FROM entities e LEFT JOIN memories m ON m.id=e.memory_id
+      WHERE e.id!=? AND ${activeObject('entity', 'e.id')}
+      AND (e.memory_id IS NULL OR m.status!='archived')
+      AND (e.name LIKE ? ESCAPE '\\' OR m.project LIKE ? ESCAPE '\\')
+      ORDER BY e.updated_at DESC,e.id LIMIT 20 OFFSET ?
+    `,
+      )
+      .all(exclude, text, text, offset);
+  }
   link(input: unknown) {
     const data = relationSchema.parse(input);
     if (data.from_id === data.to_id) throw new AppError(400, 'Self relationships are not supported');

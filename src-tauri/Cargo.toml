@@ -1,6 +1,6 @@
 [package]
 name = "mneme-desktop"
-version = "0.2.3"
+version = "0.3.0"
 description = "Mneme — a local home for your memory"
 authors = ["Mneme contributors"]
 edition = "2021"

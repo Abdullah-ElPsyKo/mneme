@@ -149,6 +149,7 @@ test('Evidence-only Ask shows citations while no external network requests occur
   await page.getByRole('button', { name: 'Ask', exact: true }).click();
   await page.getByLabel('Ask a question').fill('Why RDP MGMT01?');
   await page.getByRole('button', { name: 'Ask', exact: true }).last().click();
+  await page.getByText('Sources · 1', { exact: true }).click();
   await expect(page.getByText('S1', { exact: true })).toBeVisible();
   await expect(page.getByText('Local evidence · no model call')).toBeVisible();
   expect(external).toEqual([]);
@@ -159,6 +160,7 @@ test('Evidence-only Ask shows citations while no external network requests occur
 test('Backup through UI, verify, restore into new directory, and run Doctor', async ({ page }) => {
   await page.getByRole('button', { name: 'Ask', exact: true }).click();
   await expect(page.getByText('Why RDP MGMT01?', { exact: true })).toBeVisible();
+  await page.getByText('Sources · 1', { exact: true }).click();
   await expect(page.getByText('S1', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
   await page.getByRole('button', { name: 'Backups', exact: true }).click();

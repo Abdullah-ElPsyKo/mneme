@@ -6,7 +6,7 @@ Mneme runs on your computer. Human-readable Markdown, SQLite, and original files
 
 ## Start here
 
-Install **Mneme_0.2.3_x64-setup.exe**, then open **Mneme** from the Windows Start Menu. The Tauri 2 desktop application includes its own memory engine and Node runtime. It needs no browser, terminal, npm command, or separate Node installation. WebView2 is supplied by Windows; the installer can install it if missing (that prerequisite download requires internet).
+Install **Mneme_0.3.0_x64-setup.exe**, then open **Mneme** from the Windows Start Menu. The Tauri 2 desktop application includes its own memory engine and Node runtime. It needs no browser, terminal, npm command, or separate Node installation. WebView2 is supplied by Windows; the installer can install it if missing (that prerequisite download requires internet).
 
 First launch offers a recommended brain folder, another empty folder, or an existing Mneme brain. The recommended location is **`%LOCALAPPDATA%\MnemeBrains\Default`**, separate from the installation and disposable application settings. Existing brains stay where they are. Uninstalling the app preserves brain folders.
 

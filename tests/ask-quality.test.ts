@@ -18,6 +18,7 @@ test('Projects with identical prose retain separate status evidence, including P
         type: 'project',
         memory_class: 'semantic',
         status: i ? 'completed' : 'active',
+        project_state: i ? 'completed' : 'active',
         body: 'Implementation plans are documented here.',
       }),
     );
@@ -222,7 +223,7 @@ test('Migration preserves legacy turns; New Chat persists a fresh scope without 
     await brain.close();
     const db = new DatabaseSync(join(root, 'database/brain.db'));
     db.exec(
-      'DROP INDEX ask_turns_conversation; ALTER TABLE ask_turns DROP COLUMN conversation_id; DROP TABLE ask_chat; DELETE FROM migrations WHERE version=5;',
+      'DROP INDEX memories_project_state; ALTER TABLE memories DROP COLUMN project_state; DROP INDEX ask_turns_conversation; ALTER TABLE ask_turns DROP COLUMN conversation_id; DROP TABLE ask_chat; DELETE FROM migrations WHERE version>=5;',
     );
     db.close();
     brain = new Brain(root);

@@ -35,6 +35,7 @@ export function importedFields(metadata: Record<string, any>) {
     'type',
     'memory_class',
     'status',
+    'project_state',
     'tags',
     'project',
     'importance',

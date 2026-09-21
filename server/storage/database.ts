@@ -69,6 +69,18 @@ CREATE TABLE erasure_cleanup (id INTEGER PRIMARY KEY CHECK(id=1), files TEXT NOT
 CREATE INDEX ask_turns_conversation ON ask_turns(conversation_id);
 CREATE TABLE ask_chat (id INTEGER PRIMARY KEY CHECK(id=1), conversation_id TEXT NOT NULL);
 INSERT INTO ask_chat VALUES (1,'legacy');`,
+  // Keep lifecycle independent of archival and preserve existing canonical bytes/history.
+  `ALTER TABLE memories ADD COLUMN project_state TEXT CHECK(project_state IN ('planned','active','paused','completed','abandoned'));
+UPDATE memories SET project_state=CASE
+  WHEN status='completed' THEN 'completed'
+  WHEN status='active' THEN 'active'
+  WHEN status='archived' THEN coalesce((
+    SELECT CASE json_extract(e.payload,'$.memory.status') WHEN 'completed' THEN 'completed' WHEN 'active' THEN 'active' ELSE 'planned' END
+    FROM events e WHERE e.aggregate_id=memories.id AND e.kind IN ('memory.created','memory.updated')
+      AND json_extract(e.payload,'$.memory.status')!='archived'
+    ORDER BY e.seq DESC LIMIT 1), 'planned')
+  ELSE 'planned' END WHERE type='project';
+CREATE INDEX memories_project_state ON memories(type,project_state,status,updated_at DESC);`,
 ];
 export class Storage {
   readonly root: string;

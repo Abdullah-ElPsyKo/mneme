@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DeleteAction } from './DeleteAction';
+import { ConnectionPicker } from './ConnectionPicker';
 import {
   X,
   Pencil,
@@ -31,7 +32,6 @@ export function Inspector({
   onClose,
   onEdit,
   onSelect,
-  graph,
   onRefresh,
   notify,
 }: {
@@ -39,7 +39,6 @@ export function Inspector({
   onClose: () => void;
   onEdit: (memory: any) => void;
   onSelect: (id: string) => void;
-  graph: any;
   onRefresh: () => void;
   notify: (text: string, error?: boolean) => void;
 }) {
@@ -132,7 +131,10 @@ export function Inspector({
             <h2>{entity.entity.name}</h2>
             <div className="entity-metadata">
               <span className="status-dot" />
-              {memory?.status || entity.entity.status || 'active'}
+              {memory?.type === 'project'
+                ? memory.project_state
+                : memory?.status || entity.entity.status || 'active'}
+              {memory?.type === 'project' && memory.status === 'archived' && <span>· archived</span>}
               <span>·</span>
               <span>{entity.relationships.filter((r: any) => !r.valid_until).length} connections</span>
               {memory && (
@@ -157,6 +159,26 @@ export function Inspector({
                   }}
                 />
               )}
+              {memory?.status === 'archived' && (
+                <button
+                  disabled={busy}
+                  onClick={async () => {
+                    setBusy(true);
+                    try {
+                      await put(`/memories/${memory.id}`, { ...cleanMemory(memory), status: 'active' });
+                      await load();
+                      onRefresh();
+                      notify('Memory restored; history preserved');
+                    } catch (e) {
+                      notify((e as Error).message, true);
+                    } finally {
+                      setBusy(false);
+                    }
+                  }}
+                >
+                  <RotateCcw size={14} /> Restore memory
+                </button>
+              )}
             </div>
           </div>
           <div className="tabs">
@@ -167,6 +189,12 @@ export function Inspector({
             ))}
           </div>
           <div className="inspector-body">
+            {memory?.status === 'archived' && (
+              <p className="muted">
+                Archived and retained in your brain. Restoring adds a visible revision and preserves project
+                lifecycle; previously ended connections stay in history.
+              </p>
+            )}
             {tab === 'Overview' && (
               <>
                 {memory ? (
@@ -228,7 +256,15 @@ export function Inspector({
               <>
                 <div className="pane-heading">
                   <h3>Typed relationships</h3>
-                  <button className="icon-button" aria-label="Add relationship" onClick={() => setLink(true)}>
+                  <button
+                    className="icon-button"
+                    aria-label="Add relationship"
+                    disabled={(memory?.status || entity.entity.status) === 'archived'}
+                    onClick={() => {
+                      setTarget('');
+                      setLink(true);
+                    }}
+                  >
                     <Plus size={17} />
                   </button>
                 </div>
@@ -282,6 +318,7 @@ export function Inspector({
                       <span>
                         {event.actor}
                         {event.payload.memory && ` · revision ${event.payload.memory.version}`}
+                        {event.payload.memory?.project_state && ` · ${event.payload.memory.project_state}`}
                       </span>
                     </span>
                     <ChevronRight size={13} />
@@ -340,23 +377,7 @@ export function Inspector({
                 placeholder="uses, contains, secured_by…"
               />
             </label>
-            <label>
-              Connect to
-              <select
-                aria-label="Relationship target"
-                value={target}
-                onChange={(e) => setTarget(e.target.value)}
-              >
-                <option value="">Choose an entity</option>
-                {graph.entities
-                  ?.filter((e: any) => e.id !== id)
-                  .map((e: any) => (
-                    <option key={e.id} value={e.id}>
-                      {e.name} · {e.type}
-                    </option>
-                  ))}
-              </select>
-            </label>
+            <ConnectionPicker exclude={id} value={target} onChange={setTarget} />
             <p className="muted">This connection is recorded as explicitly provided by you.</p>
           </div>
           <div className="modal-footer">
@@ -375,6 +396,7 @@ export function Inspector({
         >
           <div className="historical-content">
             <h1>{historical.title}</h1>
+            {historical.project_state && <p>Project lifecycle: {historical.project_state}</p>}
             <Markdown text={historical.body} />
           </div>
           <div className="modal-footer">

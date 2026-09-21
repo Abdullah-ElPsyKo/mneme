@@ -51,7 +51,7 @@ test('Markdown, schema migrations, provenance and revision history persist acros
     brain = new Brain(root);
     assert.equal(brain.memories.get(original.id).body, updated.body);
     assert.equal(brain.search.query('MGMT01')[0].memory.id, original.id);
-    assert.equal(brain.storage.db.prepare('SELECT count(*) AS n FROM migrations').get()!.n, 2);
+    assert.equal(brain.storage.db.prepare('SELECT count(*) AS n FROM migrations').get()!.n, 6);
     assert.equal(brain.doctor(true).ok, true);
   } finally {
     await brain.close();

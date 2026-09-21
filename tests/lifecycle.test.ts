@@ -66,7 +66,7 @@ test('Four facts persist, migrate legacy values, and retain revision and conflic
     await brain.close();
     const db = new DatabaseSync(join(root, 'database/brain.db'));
     db.exec(
-      'DROP INDEX ask_turns_conversation; ALTER TABLE ask_turns DROP COLUMN conversation_id; DROP TABLE ask_chat; ALTER TABLE memories DROP COLUMN facts; DROP TABLE erased_fingerprints; DROP TABLE erasure_cleanup; DELETE FROM migrations WHERE version>=4;',
+      'DROP INDEX memories_project_state; ALTER TABLE memories DROP COLUMN project_state; DROP INDEX ask_turns_conversation; ALTER TABLE ask_turns DROP COLUMN conversation_id; DROP TABLE ask_chat; ALTER TABLE memories DROP COLUMN facts; DROP TABLE erased_fingerprints; DROP TABLE erasure_cleanup; DELETE FROM migrations WHERE version>=4;',
     );
     db.close();
     brain = new Brain(root);

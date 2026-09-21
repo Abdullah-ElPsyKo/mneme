@@ -206,7 +206,7 @@ export function DesktopBootstrap() {
           </>
         )}
         {state?.shortcut_error && <p className="error-text">{state.shortcut_error}</p>}
-        <span className="muted desktop-version">Mneme 0.2.3</span>
+        <span className="muted desktop-version">Mneme 0.3.0</span>
       </div>
       <DesktopHost />
     </main>
@@ -383,7 +383,7 @@ export function DesktopSettings() {
       </button>
       <div className="settings-row">
         <div>
-          <strong>Mneme 0.2.3</strong>
+          <strong>Mneme 0.3.0</strong>
           <p>
             Your memory engine runs inside this installation. App updates and uninstallation preserve brain
             folders. Updates are installed manually.

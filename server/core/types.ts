@@ -14,6 +14,20 @@ export const provenanceSchema = z
   })
   .strict();
 export type Provenance = z.infer<typeof provenanceSchema>;
+export const projectStates = ['planned', 'active', 'paused', 'completed', 'abandoned'] as const;
+export type ProjectState = (typeof projectStates)[number];
+// Legacy revisions have no lifecycle field. Interpret their explicit status without rewriting history.
+export function projectState(memory: {
+  type: string;
+  status: string;
+  project_state?: ProjectState | null;
+}): ProjectState | null {
+  if (memory.type !== 'project') return null;
+  return (
+    memory.project_state ??
+    (memory.status === 'completed' ? 'completed' : memory.status === 'active' ? 'active' : 'planned')
+  );
+}
 export const memorySchema = z
   .object({
     title: z.string().trim().min(1).max(240),
@@ -24,6 +38,7 @@ export const memorySchema = z
       .default('note'),
     memory_class: z.enum(['semantic', 'episodic', 'procedural', 'working', 'preference']).default('semantic'),
     status: z.enum(['active', 'inbox', 'archived', 'completed']).default('active'),
+    project_state: z.enum(projectStates).nullable().optional(),
     tags: z.array(z.string().trim().min(1).max(80)).max(100).default([]),
     project: z.string().max(240).default(''),
     importance: z.number().min(0).max(1).default(0.5),
@@ -41,6 +56,14 @@ export const memorySchema = z
     expected_version: z.number().int().positive().optional(),
   })
   .strict()
+  .superRefine((memory, ctx) => {
+    if (memory.type !== 'project' && memory.project_state != null)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['project_state'],
+        message: 'Only projects have a lifecycle state',
+      });
+  })
   .transform((memory) => {
     const facts =
       memory.facts ?? (memory.fact_key ? [{ key: memory.fact_key, value: memory.fact_value }] : []);

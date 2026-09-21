@@ -17,7 +17,9 @@ export function parseQuery(query: string): ParsedQuery {
     free: string[] = [];
   const parts = query.match(/(?:[\w_-]+:)?"[^"]*"|\S+/g) || [];
   for (const part of parts) {
-    const filter = part.match(/^(type|project|tag|source|before|after|class|status|entity):(.+)$/);
+    const filter = part.match(
+      /^(type|project|tag|source|before|after|class|status|entity|project_state):(.+)$/,
+    );
     if (filter) {
       filters[filter[1]] = filter[2].replace(/^"|"$/g, '');
       continue;
@@ -142,11 +144,13 @@ export class Search {
       includePrivate?: boolean;
       at?: string;
       ask?: boolean;
+      filters?: Record<string, string>;
     } = {},
   ): SearchHit[] {
     const q = parseQuery(query),
       { storage } = this.memories,
       ranked = new Map<string, { score: number; signals: Set<string>; entities: Set<string> }>();
+    Object.assign(q.filters, options.filters);
     const similarities = new Map<string, number>();
     const graphLinks = new Map<string, NonNullable<SearchHit['graph_links']>>();
     const add = (memoryId: string, rank: number, weight: number, channel: string, entity?: string) => {
@@ -166,6 +170,10 @@ export class Search {
     if (q.filters.type) {
       where.push('m.type=?');
       values.push(q.filters.type);
+    }
+    if (q.filters.project_state) {
+      where.push("m.type='project' AND m.project_state=?");
+      values.push(q.filters.project_state);
     }
     if (q.filters.project) {
       where.push("(m.project=? COLLATE NOCASE OR (m.type='project' AND m.title=? COLLATE NOCASE))");

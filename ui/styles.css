@@ -853,6 +853,62 @@ details label {
   font-size: 11px;
   white-space: nowrap;
 }
+.memory-filters {
+  margin: 12px 0 20px;
+}
+.project-lifecycle-filter {
+  display: block;
+  max-width: 300px;
+  margin: 18px 0;
+}
+.project-lifecycle-filter select {
+  margin-top: 6px;
+}
+.state-label.planned {
+  color: #aba5fa;
+}
+.state-label.paused {
+  color: #dcb67b;
+}
+.state-label.abandoned {
+  color: var(--muted);
+}
+.memory-filter-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  padding: 14px 0;
+}
+.active-filters,
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.task-editor {
+  padding: 18px;
+  margin: 16px 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.timeline-group {
+  margin: 12px 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+}
+.timeline-group summary {
+  cursor: pointer;
+}
+.timeline-group summary span {
+  margin-left: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.connection-picker label + label {
+  margin-top: 12px;
+}
 .filter-bar {
   display: flex;
   gap: 11px;

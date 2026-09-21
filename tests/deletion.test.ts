@@ -27,14 +27,14 @@ test('Archival schema upgrade preserves an existing v2 brain and marks the requi
     await brain.close();
     const db = new DatabaseSync(join(root, 'database/brain.db'));
     db.exec(
-      'DROP INDEX ask_turns_conversation; ALTER TABLE ask_turns DROP COLUMN conversation_id; DROP TABLE ask_chat; DROP INDEX events_kind_aggregate; ALTER TABLE memories DROP COLUMN facts; DROP TABLE erased_fingerprints; DROP TABLE erasure_cleanup; DELETE FROM migrations WHERE version>=3;',
+      'DROP INDEX memories_project_state; ALTER TABLE memories DROP COLUMN project_state; DROP INDEX ask_turns_conversation; ALTER TABLE ask_turns DROP COLUMN conversation_id; DROP TABLE ask_chat; DROP INDEX events_kind_aggregate; ALTER TABLE memories DROP COLUMN facts; DROP TABLE erased_fingerprints; DROP TABLE erasure_cleanup; DELETE FROM migrations WHERE version>=3;',
     );
     db.close();
     brain = new Brain(root);
     assert.deepEqual(readFileSync(join(root, memory.path)), bytes);
     assert.equal(brain.status().events, events);
     assert.equal(brain.memories.get(memory.id).body, memory.body);
-    assert.equal(brain.storage.db.prepare('SELECT max(version) AS v FROM migrations').get()!.v, 5);
+    assert.equal(brain.storage.db.prepare('SELECT max(version) AS v FROM migrations').get()!.v, 6);
     assert.equal(brain.doctor(true).ok, true);
   } finally {
     await brain.close();

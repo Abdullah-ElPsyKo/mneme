@@ -56,9 +56,52 @@ List endpoints accept `limit` and `offset` (bounded server-side). Dates are UTC 
 
 Memory classes: `semantic`, `episodic`, `procedural`, `working`, `preference`. Memory statuses: `active`, `inbox`, `archived`, `completed`. Task statuses: `open`, `doing`, `done`, `cancelled`. Memory/entity/relationship types are extensible lowercase identifiers.
 
+Project memories additionally carry `project_state`: `planned`, `active`, `paused`,
+`completed`, or `abandoned`. It is independent of memory visibility/archive status.
+Set it during creation or a normal version-checked memory PUT. New projects default
+to planned (an explicit legacy `status: completed` still defaults to completed).
+Omitting lifecycle during an update preserves its current value. Non-project
+memories cannot carry a non-null project lifecycle.
+
+Both `/memories` and `/search` accept `project_state` alongside their existing
+filters; search text also supports `project_state:paused`. Completed and abandoned
+projects remain available unless explicitly archived. Ask evidence includes the
+project lifecycle, and its project `status` reflects lifecycle rather than visibility.
+
+Schema migration 6 preserves existing active/completed classifications. Inbox
+projects become planned. Archived projects recover the last recorded non-archived
+active/completed state, falling back to planned when none is recorded. The migration
+does not rewrite Markdown, historical events, provenance, versions, or associated
+memories. Subsequent edits record lifecycle in both Markdown and revision history.
+An archived project retains its lifecycle when restored. Older binaries refuse
+schema 6 brains; use a pre-upgrade backup if reverting to an older application.
+
 Provenance kinds: `user`, `import`, `observation`, `software`, `ai`, `summary`, `derived`. Optional fields include `source_id`, `source_location`, `confidence`, `extraction_method`, `model`, `parent_event`, and `evidence`. Accepting a proposal preserves its origin and records user review separately.
 
 ## Optimistic editing
+
+The Notes, Projects and Inbox filters query the service before pagination. `/memories`
+accepts `type`, `project`, `status`, `memory_class`, and exact `tag` (combined with AND).
+Its optional `q` is a literal title substring, including for archived memories. `/search`
+also accepts separate `type`, `project`, `status`, `class`, and `tag` parameters alongside
+its existing query syntax; explicit parameters take precedence over query text.
+
+`GET /connection-options?q=...&exclude=UUID&offset=0` searches eligible entities across
+the brain by name or project, returning at most 20 lightweight options. It uses the
+same endpoint eligibility as relationship creation, excludes the source and archived
+objects, and includes private memories for authenticated local manual selection.
+
+`GET /timeline?timezone=Europe/Brussels&limit=80&offset=0` returns the latest event
+plus `day` and `count` for each memory/calendar-day group. Non-memory events remain
+individual entries. Grouping happens before pagination. Optional `before` and `after`
+are inclusive UTC timestamps. Add `aggregate=MEMORY_UUID&day=YYYY-MM-DD` to page
+through that group's original events in newest-first order. This is a read-only view
+over the event log; `/events` remains unchanged.
+
+Archive restoration uses the normal version-checked memory PUT with `status: active`.
+It appends a revision, retains provenance and earlier revisions, and leaves previously
+ended relationships ended. The Archived tab searches titles and metadata because
+archived content intentionally has no full-text index entries.
 
 Read a memory, remove output-only fields (`id`, `path`, `content_hash`, `created_at`, `updated_at`, `version`), and PUT the remaining input with `expected_version` set to the version you read. A stale version or externally changed Markdown returns 409. Keep the user's draft, reload, and reconcile explicitly; never silently retry by overwriting a newer revision.
 
