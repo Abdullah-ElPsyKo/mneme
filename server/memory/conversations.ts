@@ -77,7 +77,13 @@ export class Conversations {
       if (conversationId !== this.current())
         throw new AppError(409, 'The active chat changed. Ask again in the current chat.');
       for (const evidence of context.evidence)
-        if (!this.storage.db.prepare('SELECT 1 FROM memories WHERE id=?').get(evidence.memory_id))
+        if (
+          !this.storage.db
+            .prepare(
+              evidence.task_id ? 'SELECT 1 FROM tasks WHERE id=?' : 'SELECT 1 FROM memories WHERE id=?',
+            )
+            .get(evidence.task_id || evidence.memory_id)
+        )
           throw new AppError(409, 'Retrieved evidence was erased. Ask again to refresh the context.');
       this.storage.db
         .prepare('INSERT INTO ask_turns(id,created_at,data,conversation_id) VALUES (?,?,?,?)')
@@ -87,10 +93,14 @@ export class Conversations {
         turn.id,
         {
           question,
-          citations: context.evidence.map((e) => ({ memory_id: e.memory_id, version: e.version })),
+          citations: context.evidence.map((e) => ({
+            memory_id: e.memory_id,
+            ...(e.task_id ? { task_id: e.task_id } : {}),
+            version: e.version,
+          })),
           model,
         },
-        { kind: 'user', actor: 'user', evidence: context.evidence.map((e) => e.memory_id) },
+        { kind: 'user', actor: 'user', evidence: context.evidence.map((e) => e.task_id || e.memory_id!) },
       );
     });
     return turn;
@@ -109,7 +119,7 @@ export class Conversations {
           kind: turn.model ? 'ai' : 'software',
           actor: turn.model || 'retrieval',
           model: turn.model || undefined,
-          evidence: turn.evidence.map((e: any) => e.memory_id),
+          evidence: turn.evidence.map((e: any) => e.task_id || e.memory_id),
         },
       );
     });

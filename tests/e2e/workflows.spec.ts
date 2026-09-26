@@ -100,7 +100,7 @@ test('Create project and entity, connect real nodes, inspect graph and timeline'
   await page.screenshot({ animations: 'disabled', path: 'artifacts/screenshots/06-projects.png' });
   await page.getByRole('button', { name: 'Brain', exact: true }).click();
   await page.getByRole('button', { name: 'Create entity', exact: true }).click();
-  await page.getByLabel('Entity name').fill('MGMT01');
+  await page.getByLabel('Entity name', { exact: true }).fill('MGMT01');
   await page.getByLabel('Entity type').fill('device');
   await page.getByRole('button', { name: 'Create entity', exact: true }).last().click();
   await page.getByRole('button', { name: 'Connections', exact: true }).click();

@@ -158,8 +158,9 @@ export function App() {
     return () => window.removeEventListener('keydown', handler);
   }, []);
   useEffect(() => {
+    document.documentElement.dataset.textSize = settings?.text_size || 'default';
     document.documentElement.dataset.reducedMotion = settings?.reduced_motion ? 'true' : 'false';
-  }, [settings?.reduced_motion]);
+  }, [settings?.reduced_motion, settings?.text_size]);
   const navigate = (name: string) => {
     setView(name);
     setSelected(undefined);
@@ -389,6 +390,17 @@ export function App() {
             )}
             <Graph
               data={graph}
+              showLabels={settings?.graph_labels ?? true}
+              textSize={settings?.text_size || 'default'}
+              onLabelsChange={async (graph_labels) => {
+                try {
+                  const { key_configured, key_storage, ...current } = await api('/settings');
+                  await put('/settings', { ...current, graph_labels });
+                  refresh();
+                } catch (e) {
+                  notify((e as Error).message, true);
+                }
+              }}
               selected={selected}
               highlights={highlight}
               onSelect={select}
@@ -717,7 +729,7 @@ function EntityModal({
               aria-label="Entity name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="A person, technology, device, or concept"
+              placeholder="FW01, Active Directory, FORGELINE…"
               required
             />
           </label>
@@ -725,12 +737,33 @@ function EntityModal({
             Entity type
             <input
               aria-label="Entity type"
+              list="entity-type-suggestions"
+              maxLength={40}
               value={type}
               onChange={(e) => setType(e.target.value)}
               pattern="[a-z][a-z0-9_-]*"
               required
             />
           </label>
+          <datalist id="entity-type-suggestions">
+            {[
+              'person',
+              'project',
+              'organization',
+              'technology',
+              'software',
+              'device',
+              'location',
+              'concept',
+            ].map((value) => (
+              <option key={value} value={value} />
+            ))}
+          </datalist>
+          <p className="muted">
+            Name the specific thing, such as VMware Workstation. Type describes its kind, such as software.
+            Choose a suggestion or enter a custom type using lowercase letters, numbers, underscores or
+            hyphens.
+          </p>
           <p className="muted">
             An entity gives your knowledge a common point of reference. Add typed connections in its
             inspector.

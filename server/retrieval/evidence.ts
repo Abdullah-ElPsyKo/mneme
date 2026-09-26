@@ -7,6 +7,7 @@ const stop = new Set(
   ),
 );
 const forms: Record<string, string> = {
+  tasks: 'task',
   projects: 'project',
   goals: 'goal',
   objectives: 'goal',
@@ -60,9 +61,13 @@ export function terms(text: string): string[] {
   ];
 }
 export function askIntent(query: string) {
-  const words = terms(parseQuery(query).text);
+  // Remove a conversational greeting only in greeting position, preserving named recall (e.g. CHIEF).
+  const text = parseQuery(query).text.replace(/^ok(?:ay)?[\s,!]+(?:chief[\s,!]+)?/i, '');
+  const words = terms(text).filter((w) => !['our', 'any', 'we', 'us'].includes(w));
   const overviewWords = new Set([
     'project',
+    'task',
+    'goal',
     'active',
     'completed',
     'planned',
@@ -81,6 +86,7 @@ export function askIntent(query: string) {
   return {
     words,
     projects: words.includes('project') && words.every((w) => overviewWords.has(w)),
+    tasks: words.includes('task'),
     goals: words.includes('goal'),
   };
 }
@@ -97,6 +103,17 @@ export function embeddingText(memory: Memory) {
 
 // Candidate rank is deliberately not a relevance threshold: RRF, age, authority and
 // graph degree can rank a weak match highly. Evaluate contribution before those boosts.
+const overviewWordsForGoals = new Set([
+  'goal',
+  'task',
+  'project',
+  'active',
+  'technical',
+  'development',
+  'list',
+  'all',
+  'which',
+]);
 export function selectEvidence(query: string, candidates: SearchHit[]) {
   const parsed = parseQuery(query),
     intent = askIntent(query),
@@ -171,10 +188,16 @@ export function selectEvidence(query: string, candidates: SearchHit[]) {
       (!strongLexical || coverage >= 0.4);
     const metadataOnly = !parsed.text && Object.keys(parsed.filters).length > 0;
     const projectOverview = intent.projects && hit.memory.type === 'project';
+    const goalOverview =
+      intent.goals && hit.memory.type === 'goal' && words.every((w) => overviewWordsForGoals.has(w));
     const lexical = words.length > 0 && coverage >= 0.6;
     if (
       inScope &&
-      (metadataOnly || projectOverview || multiTopic || (!intent.projects && (lexical || semantic)))
+      (metadataOnly ||
+        projectOverview ||
+        goalOverview ||
+        multiTopic ||
+        (!intent.projects && (lexical || semantic)))
     )
       accepted.push({
         hit,

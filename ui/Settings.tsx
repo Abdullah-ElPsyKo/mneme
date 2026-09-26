@@ -115,6 +115,18 @@ export function SettingsView({
         <div className="settings-section">
           <h2>A home for your memory</h2>
           <label>
+            Text size
+            <select
+              aria-label="Text size"
+              value={draft.text_size}
+              onChange={(e) => change('text_size', e.target.value)}
+            >
+              <option value="compact">Compact</option>
+              <option value="default">Default</option>
+              <option value="large">Large</option>
+            </select>
+          </label>
+          <label>
             Brain name
             <input value={draft.name} onChange={(e) => change('name', e.target.value)} />
           </label>

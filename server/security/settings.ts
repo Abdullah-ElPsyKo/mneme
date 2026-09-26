@@ -20,6 +20,8 @@ export const settingsSchema = z
     backup_interval_hours: z.number().int().min(0).max(8760).default(0),
     consolidation_interval_hours: z.number().int().min(0).max(8760).default(24),
     auto_accept_links: z.boolean().default(false),
+    graph_labels: z.boolean().default(true),
+    text_size: z.enum(['compact', 'default', 'large']).default('default'),
     reduced_motion: z.boolean().default(false),
   })
   .strict();

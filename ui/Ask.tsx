@@ -50,13 +50,11 @@ export function Ask({
           setError('');
           if (data.current !== chatId) follow.current = true;
           setHistory((current) =>
-            turns
-              .reverse()
-              .map((turn: any) => ({
-                ...turn,
-                clientId: current.find((old) => old.id === turn.id)?.clientId,
-                loading: false,
-              })),
+            turns.reverse().map((turn: any) => ({
+              ...turn,
+              clientId: current.find((old) => old.id === turn.id)?.clientId,
+              loading: false,
+            })),
           );
         }
       })
@@ -144,7 +142,7 @@ export function Ask({
               context: data.context,
               warning: data.warning,
             });
-            onHighlights(data.context.evidence.map((e: any) => e.memory_id));
+            onHighlights(data.context.evidence.filter((e: any) => !e.task_id).map((e: any) => e.memory_id));
           }
           if (event === 'token') {
             answer += data.text;
@@ -265,17 +263,33 @@ export function Ask({
             )}
             <details className="ask-sources">
               <summary>Sources · {item.evidence.length}</summary>
-              {item.evidence.map((e: any) => (
-                <button className="evidence-item" key={e.citation} onClick={() => onSelect(e.memory_id)}>
-                  <span className="citation">{e.citation}</span>
-                  <div>
-                    <strong>{e.title}</strong>
+              {item.evidence.map((e: any) =>
+                e.task_id ? (
+                  <details className="evidence-item task-source" key={e.citation}>
+                    <summary>
+                      <span className="citation">{e.citation}</span> {e.title} · Tasks
+                    </summary>
+                    <p>
+                      {e.status}
+                      {e.project ? ` · ${e.project}` : ''}
+                      {e.due_at ? ` · due ${e.due_at}` : ''}
+                    </p>
                     <small>
-                      {e.provenance.kind} · revision {e.version}
+                      {e.provenance.kind} · revision {e.version} · snapshot at answer time
                     </small>
-                  </div>
-                </button>
-              ))}
+                  </details>
+                ) : (
+                  <button className="evidence-item" key={e.citation} onClick={() => onSelect(e.memory_id)}>
+                    <span className="citation">{e.citation}</span>
+                    <div>
+                      <strong>{e.title}</strong>
+                      <small>
+                        {e.provenance.kind} · revision {e.version}
+                      </small>
+                    </div>
+                  </button>
+                ),
+              )}
             </details>
             {!item.loading && !item.evidence.length && !item.answer && (
               <p className="muted">You haven't recorded anything that answers that yet.</p>

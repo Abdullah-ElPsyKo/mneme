@@ -12,7 +12,7 @@ body,
 }
 body {
   font-family: var(--font);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text);
   background: var(--base);
   -webkit-font-smoothing: antialiased;
@@ -165,11 +165,11 @@ label {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: #a9b6ca;
 }
 label small {
-  font-size: 11px;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: var(--muted);
 }
@@ -188,23 +188,23 @@ h4 {
   color: var(--bright);
 }
 h1 {
-  font-size: 35px;
+  font-size: var(--text-35);
   letter-spacing: -1.1px;
   line-height: 1.2;
 }
 h2 {
-  font-size: 23px;
+  font-size: var(--text-23);
   letter-spacing: -0.5px;
 }
 h3 {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
 }
 p {
   line-height: 1.7;
 }
 small {
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 code,
 pre,
@@ -212,10 +212,10 @@ kbd {
   font-family: var(--mono);
 }
 code {
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 kbd {
-  font-size: 10px;
+  font-size: var(--text-12);
   border: 1px solid #ffffff13;
   border-radius: 4px;
   color: #8492a8;
@@ -225,7 +225,7 @@ kbd {
 pre {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  font-size: 11px;
+  font-size: var(--text-12);
   line-height: 1.7;
   color: #a5b8cf;
   background: #080f1b;
@@ -235,7 +235,7 @@ pre {
 }
 details {
   margin: 16px 0;
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 summary {
   cursor: pointer;
@@ -265,13 +265,13 @@ details label {
   color: var(--muted);
 }
 .small {
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .eyebrow {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 9px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 2.1px;
   line-height: 1.6;
@@ -288,7 +288,7 @@ details label {
 }
 .tag {
   display: inline-flex;
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #a3b1c7;
   background: #a5b4fc08;
   border: 1px solid #8492af16;
@@ -353,14 +353,14 @@ details label {
   height: 37px;
 }
 .brand div {
-  font-size: 24px;
+  font-size: var(--text-24);
   letter-spacing: -0.5px;
   font-weight: 500;
   line-height: 1.2;
 }
 .brand span {
   display: block;
-  font-size: 6.7px;
+  font-size: var(--text-12);
   letter-spacing: 1.5px;
   margin-top: 7px;
   font-weight: 500;
@@ -374,15 +374,15 @@ details label {
   border-color: #26304499;
   color: #8d9bb2;
   width: 100%;
-  font-size: 11px;
+  font-size: var(--text-12);
   gap: 7px;
 }
 .command-launch kbd {
   margin-left: auto;
-  font-size: 9px;
+  font-size: var(--text-12);
 }
 .nav-heading {
-  font-size: 8px;
+  font-size: var(--text-12);
   letter-spacing: 1.8px;
   color: #53637c;
   padding: 28px 12px 11px;
@@ -400,7 +400,7 @@ details label {
   color: #94a2b8;
   padding: 10px 12px;
   border-radius: 6px;
-  font-size: 12px;
+  font-size: var(--text-12);
   min-height: 39px;
 }
 .sidebar nav button:hover {
@@ -423,7 +423,7 @@ details label {
 }
 .sidebar nav button b {
   margin-left: auto;
-  font-size: 9px;
+  font-size: var(--text-12);
   padding: 2px 5px;
   background: #afa1e516;
   color: #c0b2e6;
@@ -431,7 +431,7 @@ details label {
   border-radius: 4px;
 }
 .sidebar nav button small {
-  font-size: 8px;
+  font-size: var(--text-12);
   letter-spacing: 0.1px;
   color: #687990;
   margin-left: auto;
@@ -449,14 +449,14 @@ details label {
   justify-content: flex-start;
   background: #111a29;
   color: #adb9d0;
-  font-size: 11px;
+  font-size: var(--text-12);
   border-color: #263349;
 }
 .capture-launch kbd {
   margin-left: auto;
   border: none;
   color: #586c85;
-  font-size: 9px;
+  font-size: var(--text-12);
   padding: 0;
 }
 .settings-link {
@@ -465,7 +465,7 @@ details label {
   padding: 14px 12px;
   border: 0;
   background: transparent;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: #8e9db3;
   margin-top: 10px;
   gap: 12px;
@@ -480,12 +480,12 @@ details label {
   border-top: 1px solid var(--line-soft);
   padding: 18px 6px 2px;
   color: #a0b3bd;
-  font-size: 10px;
+  font-size: var(--text-12);
 }
 .local-indicator small {
   display: block;
   color: #52667e;
-  font-size: 8px;
+  font-size: var(--text-12);
   margin-top: 5px;
 }
 .local-indicator svg {
@@ -513,7 +513,7 @@ details label {
   z-index: 5;
   background: #0a1019ad;
   backdrop-filter: blur(12px);
-  font-size: 11px;
+  font-size: var(--text-12);
   color: #c0c9d8;
 }
 .topbar > div {
@@ -528,12 +528,12 @@ details label {
   color: #354358;
 }
 .topbar-actions button {
-  font-size: 10px;
+  font-size: var(--text-12);
   min-height: 30px;
   gap: 7px;
 }
 .storage-status {
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #708899;
   display: flex;
   align-items: center;
@@ -570,20 +570,20 @@ details label {
   pointer-events: none;
 }
 .brain-heading .eyebrow {
-  font-size: 8px;
+  font-size: var(--text-12);
   letter-spacing: 2.3px;
   color: #6c809e;
   margin-bottom: 12px;
 }
 .brain-heading h1 {
-  font-size: 28px;
+  font-size: var(--text-28);
   font-weight: 400;
   letter-spacing: -0.65px;
   color: #dce3f0;
 }
 .brain-heading p {
   margin-top: 9px;
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #71839e;
   letter-spacing: 0.2px;
 }
@@ -610,7 +610,7 @@ details label {
   border-color: transparent;
   background: transparent;
   color: #8a9bb3;
-  font-size: 10px;
+  font-size: var(--text-12);
   white-space: nowrap;
   padding: 6px 11px;
   min-height: 30px;
@@ -631,7 +631,7 @@ details label {
 }
 .cluster-filters button span {
   color: #586b87;
-  font-size: 9px;
+  font-size: var(--text-12);
 }
 .graph-space {
   position: absolute;
@@ -659,7 +659,7 @@ details label {
   align-items: center;
   gap: 9px;
   color: #7486a3;
-  font-size: 9px;
+  font-size: var(--text-12);
   letter-spacing: 0.1px;
   max-width: 65%;
 }
@@ -668,7 +668,7 @@ details label {
   margin-left: 5px;
 }
 .crosshair {
-  font-size: 18px;
+  font-size: var(--text-18);
   font-weight: 200;
   color: #536b8e;
 }
@@ -686,7 +686,7 @@ details label {
 .graph-controls small {
   width: 35px;
   text-align: center;
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #7589a5;
 }
 .graph-controls > span {
@@ -730,11 +730,11 @@ details label {
 }
 .graph-onboarding .eyebrow {
   color: #7486a5;
-  font-size: 8px;
+  font-size: var(--text-12);
   letter-spacing: 1.7px;
 }
 .graph-onboarding h2 {
-  font-size: 45px;
+  font-size: var(--text-45);
   line-height: 1.12;
   letter-spacing: -1.8px;
   font-weight: 300;
@@ -745,12 +745,12 @@ details label {
   color: #beb8ee;
 }
 .graph-onboarding p {
-  font-size: 11px;
+  font-size: var(--text-12);
   line-height: 1.9;
   color: #7d8eaa;
 }
 .graph-onboarding button {
-  font-size: 11px;
+  font-size: var(--text-12);
   padding: 10px 15px;
   margin-top: 25px;
   gap: 10px;
@@ -763,10 +763,10 @@ details label {
   gap: 9px;
   align-items: center;
   color: #7c8eaa;
-  font-size: 10px;
+  font-size: var(--text-12);
 }
 .graph-page button {
-  font-size: 10px;
+  font-size: var(--text-12);
   min-height: 24px;
   padding: 4px 8px;
 }
@@ -786,30 +786,30 @@ details label {
 }
 .graph-accessible-list h3 {
   padding: 0 4px 12px;
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .graph-accessible-list button {
   width: 100%;
   background: transparent;
   border: 0;
   justify-content: flex-start;
-  font-size: 11px;
+  font-size: var(--text-12);
   padding: 8px 5px;
 }
 .graph-accessible-list button span {
   margin-left: auto;
   color: var(--muted);
-  font-size: 9px;
+  font-size: var(--text-12);
 }
 .graph-accessible-list p {
-  font-size: 10px;
+  font-size: var(--text-12);
   color: var(--muted);
 }
 .return-present {
   position: absolute;
   right: 35px;
   top: 84px;
-  font-size: 10px;
+  font-size: var(--text-12);
   z-index: 3;
 }
 .view-scroll {
@@ -830,19 +830,19 @@ details label {
   margin-bottom: 32px;
 }
 .section-title .eyebrow {
-  font-size: 8px;
+  font-size: var(--text-12);
   letter-spacing: 1.8px;
   margin-bottom: 11px;
   color: #7486a5;
 }
 .section-title h1 {
-  font-size: 32px;
+  font-size: var(--text-32);
   font-weight: 400;
 }
 .section-title p {
   margin-top: 11px;
   color: #8192ad;
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .section-actions {
   display: flex;
@@ -850,7 +850,7 @@ details label {
   flex-shrink: 0;
 }
 .section-actions button {
-  font-size: 11px;
+  font-size: var(--text-12);
   white-space: nowrap;
 }
 .memory-filters {
@@ -903,7 +903,7 @@ details label {
 }
 .timeline-group summary span {
   margin-left: 12px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--muted);
 }
 .connection-picker label + label {
@@ -921,10 +921,10 @@ details label {
   background: transparent;
   border: 0;
   padding: 6px 0;
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .filter-bar span {
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #687e9c;
   white-space: nowrap;
 }
@@ -957,18 +957,18 @@ details label {
 }
 .row-eyebrow {
   text-transform: uppercase;
-  font-size: 8px;
+  font-size: var(--text-12);
   letter-spacing: 1.15px;
   line-height: 1.8;
   color: #7b8da9;
 }
 .memory-row h3 {
-  font-size: 14px;
+  font-size: var(--text-14);
   margin-top: 4px;
   font-weight: 400;
 }
 .memory-row p {
-  font-size: 11px;
+  font-size: var(--text-12);
   color: #8799b4;
   margin-top: 5px;
   max-height: 39px;
@@ -981,7 +981,7 @@ details label {
   gap: 10px;
 }
 .memory-row-end small {
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #607490;
 }
 .memory-row > svg {
@@ -989,7 +989,7 @@ details label {
   margin-left: 20px;
 }
 .state-label {
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #86a898;
   text-transform: capitalize;
   display: flex;
@@ -1035,7 +1035,7 @@ details label {
 }
 .project-item h3 {
   margin-top: 8px;
-  font-size: 21px;
+  font-size: var(--text-21);
   letter-spacing: -0.3px;
   font-weight: 400;
 }
@@ -1072,18 +1072,18 @@ details label {
 }
 .empty h3 {
   font-weight: 400;
-  font-size: 19px;
+  font-size: var(--text-19);
   letter-spacing: -0.25px;
 }
 .empty p {
   color: #778ba8;
   max-width: 400px;
-  font-size: 12px;
+  font-size: var(--text-12);
   margin: 10px 0 20px;
   line-height: 1.8;
 }
 .empty button {
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .pagination {
   display: flex;
@@ -1091,11 +1091,11 @@ details label {
   align-items: center;
   gap: 18px;
   margin-top: 25px;
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #7a8ca9;
 }
 .pagination button {
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .search-hero {
   display: flex;
@@ -1112,7 +1112,7 @@ details label {
   background: transparent;
   border: 0;
   padding: 8px 0;
-  font-size: 17px;
+  font-size: var(--text-17);
   letter-spacing: -0.3px;
   outline: 0;
 }
@@ -1125,12 +1125,12 @@ details label {
   gap: 8px;
   margin-top: 15px;
   flex-wrap: wrap;
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #687d9c;
 }
 .search-help button {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: var(--text-12);
   min-height: 25px;
   background: #101827;
   border-color: #29395366;
@@ -1140,7 +1140,7 @@ details label {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #7890ad;
   margin-top: 37px;
   padding-bottom: 15px;
@@ -1168,7 +1168,7 @@ details label {
   gap: 15px;
 }
 .result-heading h3 {
-  font-size: 17px;
+  font-size: var(--text-17);
   margin-top: 4px;
   font-weight: 400;
 }
@@ -1178,7 +1178,7 @@ details label {
 .search-result > p {
   color: #8e9fba;
   margin-top: 12px;
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.8;
 }
 .search-result-footer {
@@ -1186,7 +1186,7 @@ details label {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #647c9e;
   margin-top: 16px;
 }
@@ -1196,7 +1196,7 @@ details label {
   gap: 4px;
 }
 .search-result-footer .tag {
-  font-size: 8px;
+  font-size: var(--text-12);
 }
 .timeline-filter {
   display: flex;
@@ -1205,17 +1205,17 @@ details label {
 }
 .timeline-filter label {
   width: 175px;
-  font-size: 10px;
+  font-size: var(--text-12);
 }
 .timeline-filter input {
   padding: 7px 10px;
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .timeline {
   padding-left: 12px;
 }
 .timeline-date {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.1px;
   margin: 30px 0 12px;
   color: #a0b0c9;
@@ -1236,18 +1236,18 @@ details label {
 }
 .timeline-event time {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #657b9d;
   width: 48px;
   flex-shrink: 0;
   margin-top: 2px;
 }
 .timeline-event h4 {
-  font-size: 14px;
+  font-size: var(--text-14);
   margin-top: 3px;
 }
 .timeline-event p {
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #6c83a5;
   margin-top: 7px;
 }
@@ -1286,7 +1286,7 @@ details label {
   background: transparent;
   border: 0;
   padding: 8px 0;
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .task-capture-details {
   display: flex;
@@ -1295,18 +1295,18 @@ details label {
   padding: 16px 0 0 31px;
 }
 .task-capture-details label {
-  font-size: 9px;
+  font-size: var(--text-12);
   gap: 6px;
   width: 180px;
 }
 .task-capture-details input {
   min-height: 30px;
   padding: 6px 8px;
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .task-capture-details button {
   margin-left: auto;
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .tabs {
   display: flex;
@@ -1321,7 +1321,7 @@ details label {
   border-radius: 0;
   color: #7b8ca8;
   padding: 13px 14px;
-  font-size: 11px;
+  font-size: var(--text-12);
   min-height: 38px;
   white-space: nowrap;
 }
@@ -1352,11 +1352,11 @@ details label {
   flex: 1;
 }
 .task-row h3 {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 400;
 }
 .task-row p {
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #6880a0;
   margin-top: 5px;
 }
@@ -1383,7 +1383,7 @@ details label {
   width: 106px;
   background: transparent;
   border-color: #25344d8f;
-  font-size: 10px;
+  font-size: var(--text-12);
   padding: 5px;
   min-height: 28px;
   color: #91a2bc;
@@ -1408,7 +1408,7 @@ details label {
   min-width: 0;
 }
 .inbox-item h3 {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 400;
   margin-top: 6px;
   overflow-wrap: anywhere;
@@ -1418,18 +1418,18 @@ details label {
   gap: 7px;
 }
 .inbox-actions > button {
-  font-size: 10px;
+  font-size: var(--text-12);
 }
 .proposal-item {
   padding: 25px 0;
   border-bottom: 1px solid var(--line-soft);
 }
 .proposal-item h3 {
-  font-size: 18px;
+  font-size: var(--text-18);
   margin-top: 8px;
 }
 .proposal-item > p {
-  font-size: 10px;
+  font-size: var(--text-12);
 }
 .proposal-item pre {
   max-height: 200px;
@@ -1442,7 +1442,7 @@ details label {
   margin-top: 17px;
 }
 .proposal-actions button {
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .proposal-evidence {
   display: flex;
@@ -1450,7 +1450,7 @@ details label {
   margin-top: 10px;
 }
 .proposal-evidence button {
-  font-size: 10px;
+  font-size: var(--text-12);
   background: transparent;
   border: 0;
   padding-left: 0;
@@ -1472,12 +1472,12 @@ details label {
   background: #8b9bcc0a;
 }
 .import-zone strong {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 400;
   color: #c0ccdd;
 }
 .import-zone p {
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #6b81a2;
   margin-top: 6px;
 }
@@ -1485,7 +1485,7 @@ details label {
   margin-left: auto;
 }
 .source-note {
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #647e9f;
   margin: 15px 0 27px;
 }
@@ -1498,7 +1498,7 @@ details label {
 }
 .file-extension {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: var(--text-12);
   border: 1px solid #63799738;
   background: #627b9a08;
   color: #849ab8;
@@ -1522,17 +1522,17 @@ details label {
   max-width: 100%;
 }
 .source-main h3 {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 400;
   overflow-wrap: anywhere;
 }
 .source-main p {
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #6e84a4;
   margin-top: 6px;
 }
 .source-main code {
-  font-size: 8px;
+  font-size: var(--text-12);
   color: #405b7d;
   display: block;
   margin-top: 8px;
@@ -1542,7 +1542,7 @@ details label {
   align-items: center;
   gap: 7px;
   color: #a6a5d3;
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .inspector,
 .ask-pane {
@@ -1572,7 +1572,7 @@ details label {
   gap: 10px;
 }
 .inspector-top .eyebrow {
-  font-size: 8px;
+  font-size: var(--text-12);
   letter-spacing: 1.4px;
   color: #6d82a5;
 }
@@ -1591,12 +1591,12 @@ details label {
   margin: 5px 0 20px;
 }
 .entity-heading .eyebrow {
-  font-size: 8px;
+  font-size: var(--text-12);
   color: #808cac;
   letter-spacing: 1.6px;
 }
 .entity-heading h2 {
-  font-size: 25px;
+  font-size: var(--text-25);
   margin-top: 6px;
   line-height: 1.25;
   overflow-wrap: anywhere;
@@ -1607,7 +1607,7 @@ details label {
   align-items: center;
   gap: 8px;
   color: #8194b0;
-  font-size: 10px;
+  font-size: var(--text-12);
   margin-top: 10px;
 }
 .entity-metadata button {
@@ -1619,7 +1619,7 @@ details label {
 }
 .inspector .tabs button {
   padding: 12px 10px;
-  font-size: 10px;
+  font-size: var(--text-12);
 }
 .inspector-body {
   overflow: auto;
@@ -1632,7 +1632,7 @@ details label {
   margin: 0 0 18px;
 }
 .inspector .markdown {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: #adbad0;
 }
 .markdown {
@@ -1644,15 +1644,15 @@ details label {
   line-height: 1.85;
 }
 .markdown h1 {
-  font-size: 24px;
+  font-size: var(--text-24);
   margin: 15px 0;
 }
 .markdown h2 {
-  font-size: 19px;
+  font-size: var(--text-19);
   margin: 23px 0 12px;
 }
 .markdown h3 {
-  font-size: 15px;
+  font-size: var(--text-15);
   margin: 20px 0 10px;
 }
 .markdown ul,
@@ -1694,7 +1694,7 @@ details label {
   border: 1px solid var(--line);
   padding: 8px 11px;
   text-align: left;
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .markdown hr {
   border: 0;
@@ -1708,7 +1708,7 @@ details label {
   display: flex;
   gap: 9px;
   color: #6e86a7;
-  font-size: 10px;
+  font-size: var(--text-12);
   line-height: 1.8;
 }
 .fact-box {
@@ -1723,7 +1723,7 @@ details label {
 }
 .fact-box span {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #8b99bc;
 }
 .fact-box strong {
@@ -1736,7 +1736,7 @@ details label {
   gap: 18px;
   padding: 14px 0;
   border-bottom: 1px solid var(--line-soft);
-  font-size: 11px;
+  font-size: var(--text-12);
   color: #7f96b8;
 }
 .detail-row strong {
@@ -1755,7 +1755,7 @@ details label {
   margin-bottom: 13px;
 }
 .pane-heading h3 {
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .relationship-row {
   display: flex;
@@ -1778,15 +1778,15 @@ details label {
   padding: 0;
 }
 .relationship-row small {
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #7f8dba;
 }
 .relationship-row strong {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 400;
 }
 .relationship-row span {
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #5e7698;
 }
 .relationship-row.ended {
@@ -1813,15 +1813,15 @@ details label {
   flex: 1;
 }
 .history-item small {
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #6c83a5;
 }
 .history-item strong {
-  font-size: 11px;
+  font-size: var(--text-12);
   font-weight: 400;
 }
 .history-item span span {
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #6e82a1;
 }
 .history-item > svg {
@@ -1848,11 +1848,11 @@ details label {
 }
 .provenance-banner strong {
   font-weight: 500;
-  font-size: 13px;
+  font-size: var(--text-13);
   text-transform: capitalize;
 }
 .provenance-banner span {
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #6b949a;
 }
 .provenance-field {
@@ -1860,13 +1860,13 @@ details label {
 }
 .provenance-field label {
   text-transform: uppercase;
-  font-size: 8px;
+  font-size: var(--text-12);
   letter-spacing: 1px;
   color: #6983a6;
   margin-bottom: 7px;
 }
 .provenance-field p {
-  font-size: 11px;
+  font-size: var(--text-12);
   color: #a0b2ce;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -1874,7 +1874,7 @@ details label {
 .provenance-field code {
   display: block;
   word-break: break-all;
-  font-size: 9px;
+  font-size: var(--text-12);
   line-height: 1.8;
   color: #718daf;
   margin-bottom: 18px;
@@ -1903,7 +1903,7 @@ details label {
 }
 .ask-sources summary {
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--text-12);
   cursor: pointer;
 }
 .ask-jump {
@@ -1924,12 +1924,12 @@ details label {
   margin-bottom: 25px;
 }
 .ask-intro h2 {
-  font-size: 25px;
+  font-size: var(--text-25);
   font-weight: 400;
   letter-spacing: -0.6px;
 }
 .ask-intro > p {
-  font-size: 11px;
+  font-size: var(--text-12);
   color: #8495b1;
   margin: 14px 0 25px;
   line-height: 1.9;
@@ -1943,7 +1943,7 @@ details label {
   background: #839cbc03;
   border-radius: 8px;
   color: #7d94b5;
-  font-size: 10px;
+  font-size: var(--text-12);
   line-height: 1.8;
 }
 .ask-explainer svg {
@@ -1974,7 +1974,7 @@ details label {
   min-height: 50px;
   max-height: 120px;
   padding: 3px 0;
-  font-size: 11px;
+  font-size: var(--text-12);
   outline: 0;
   line-height: 1.8;
 }
@@ -1998,7 +1998,7 @@ details label {
   align-items: center;
   gap: 6px;
   margin-top: 13px;
-  font-size: 8px;
+  font-size: var(--text-12);
   color: #7086a4;
 }
 .ask-options {
@@ -2007,7 +2007,7 @@ details label {
   justify-content: space-between;
 }
 .ask-options .check-label {
-  font-size: 9px;
+  font-size: var(--text-12);
   gap: 6px;
 }
 .ask-options input {
@@ -2020,20 +2020,20 @@ details label {
   border-bottom: 1px solid var(--line-soft);
 }
 .ask-question > span {
-  font-size: 8px;
+  font-size: var(--text-12);
   text-transform: uppercase;
   letter-spacing: 1.1px;
   color: #747ba1;
 }
 .ask-question h3 {
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.5;
   font-weight: 400;
   margin: 8px 0 20px;
   letter-spacing: -0.2px;
 }
 .ask-turn .markdown {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: #b1bed3;
 }
 .evidence-label {
@@ -2041,7 +2041,7 @@ details label {
   align-items: center;
   gap: 8px;
   color: #799d9e;
-  font-size: 9px;
+  font-size: var(--text-12);
   margin: 20px 0 12px;
 }
 .evidence-item {
@@ -2058,7 +2058,7 @@ details label {
 }
 .citation {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #b2a9dd;
   border: 1px solid #afa1e329;
   background: #afa1e30b;
@@ -2068,10 +2068,10 @@ details label {
 }
 .evidence-item strong {
   font-weight: 500;
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .evidence-item p {
-  font-size: 10px;
+  font-size: var(--text-12);
   line-height: 1.65;
   color: #7d94b2;
   margin-top: 7px;
@@ -2079,21 +2079,21 @@ details label {
   overflow: hidden;
 }
 .evidence-item small {
-  font-size: 8px;
+  font-size: var(--text-12);
   color: #607a9b;
   display: block;
   margin-top: 8px;
 }
 .context-details summary {
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #7086a8;
 }
 .context-details summary span {
-  font-size: 8px;
+  font-size: var(--text-12);
   display: block;
 }
 .context-details pre {
-  font-size: 9px;
+  font-size: var(--text-12);
   max-height: 250px;
   overflow: auto;
 }
@@ -2106,7 +2106,7 @@ details label {
   padding: 10px;
   border: 1px solid #a5875930;
   border-radius: 6px;
-  font-size: 10px;
+  font-size: var(--text-12);
   line-height: 1.7;
   margin: 12px 0;
   color: #c0ae93;
@@ -2144,7 +2144,7 @@ details label {
   gap: 20px;
 }
 .modal-head h2 {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 500;
   letter-spacing: 0;
   color: #b0bed4;
@@ -2159,11 +2159,11 @@ details label {
   background: #0d162344;
 }
 .modal-footer .muted {
-  font-size: 9px;
+  font-size: var(--text-12);
   line-height: 1.6;
 }
 .modal-footer button {
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .form-stack {
   padding: 24px;
@@ -2172,7 +2172,7 @@ details label {
   gap: 19px;
 }
 .form-stack > p {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: #899dbb;
 }
 .form-columns {
@@ -2197,7 +2197,7 @@ details label {
   border: 0;
   border-radius: 0;
   padding: 7px 0 18px;
-  font-size: 25px;
+  font-size: var(--text-25);
   font-weight: 400;
   letter-spacing: -0.6px;
   min-height: 54px;
@@ -2215,7 +2215,7 @@ details label {
   border-bottom: 1px solid var(--line-soft);
 }
 .editor-toolbar > span {
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #5c7397;
 }
 .segmented {
@@ -2228,7 +2228,7 @@ details label {
   border-radius: 5px;
   padding: 6px 9px;
   min-height: 27px;
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #7c90af;
 }
 .segmented button.active {
@@ -2243,7 +2243,7 @@ details label {
   background: transparent;
   line-height: 1.95;
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: var(--text-12);
   padding: 20px 0;
   tab-size: 2;
   color: #b4c3d9;
@@ -2257,7 +2257,7 @@ details label {
   padding: 18px 0;
 }
 .editor-preview .markdown {
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .editor-properties {
   padding: 27px 19px;
@@ -2266,29 +2266,29 @@ details label {
   overflow: auto;
 }
 .editor-properties > .eyebrow {
-  font-size: 8px;
+  font-size: var(--text-12);
   margin-bottom: 23px;
 }
 .editor-properties > label {
   margin: 17px 0;
-  font-size: 10px;
+  font-size: var(--text-12);
   gap: 7px;
 }
 .editor-properties input,
 .editor-properties select {
-  font-size: 10px;
+  font-size: var(--text-12);
   padding: 7px 9px;
   min-height: 32px;
 }
 .editor-properties details {
-  font-size: 10px;
+  font-size: var(--text-12);
 }
 .check-label {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 9px;
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .check-label span {
   display: inline-flex;
@@ -2308,20 +2308,20 @@ details label {
   margin-top: 3px;
 }
 .property-note p {
-  font-size: 9px;
+  font-size: var(--text-12);
   line-height: 1.8;
 }
 .capture-body {
   padding: 24px;
 }
 .capture-body > .muted {
-  font-size: 11px;
+  font-size: var(--text-12);
   margin-bottom: 17px;
 }
 .capture-body textarea {
   min-height: 180px;
   resize: vertical;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.85;
   background: #0d1624;
   padding: 15px;
@@ -2334,13 +2334,13 @@ details label {
   padding: 14px 23px;
   border-top: 1px solid #9e788148;
   background: #311e2922;
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .discard-panel p {
   margin-right: auto;
 }
 .discard-panel button {
-  font-size: 10px;
+  font-size: var(--text-12);
 }
 .historical-content {
   padding: 29px 32px;
@@ -2348,16 +2348,16 @@ details label {
   overflow: auto;
 }
 .historical-content > h1 {
-  font-size: 28px;
+  font-size: var(--text-28);
   margin: 14px 0 24px;
 }
 .historical-content .markdown {
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .json-editor {
   min-height: 260px;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .palette-input {
   display: flex;
@@ -2371,7 +2371,7 @@ details label {
   border: 0;
   background: transparent;
   padding: 3px 0;
-  font-size: 16px;
+  font-size: var(--text-16);
   outline: 0;
 }
 .palette-input input:focus-visible {
@@ -2388,7 +2388,7 @@ details label {
   border: 1px solid transparent;
   justify-content: flex-start;
   gap: 12px;
-  font-size: 12px;
+  font-size: var(--text-12);
   min-height: 42px;
   border-radius: 7px;
   color: #aabbd5;
@@ -2401,7 +2401,7 @@ details label {
 .palette-results small {
   margin-left: auto;
   color: #687f9e;
-  font-size: 9px;
+  font-size: var(--text-12);
 }
 .palette-results p {
   padding: 20px;
@@ -2418,7 +2418,7 @@ details label {
   display: flex;
   justify-content: space-between;
   padding: 14px 20px;
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #667f9f;
   border-top: 1px solid var(--line);
 }
@@ -2434,7 +2434,7 @@ details label {
   overflow: auto;
 }
 .settings-tabs button {
-  font-size: 10px;
+  font-size: var(--text-12);
   min-height: 32px;
   background: transparent;
   border: 1px solid transparent;
@@ -2452,27 +2452,27 @@ details label {
   padding-bottom: 20px;
 }
 .settings-section > h2 {
-  font-size: 23px;
+  font-size: var(--text-23);
   font-weight: 400;
   margin-bottom: 16px;
 }
 .settings-section > label {
   margin: 25px 0;
   max-width: 650px;
-  font-size: 11px;
+  font-size: var(--text-12);
   gap: 9px;
 }
 .settings-section > p {
-  font-size: 12px;
+  font-size: var(--text-12);
   max-width: 620px;
   margin-bottom: 25px;
 }
 .settings-section input,
 .settings-section select {
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .settings-section > h3 {
-  font-size: 13px;
+  font-size: var(--text-13);
   margin: 30px 0 12px;
 }
 .settings-row,
@@ -2489,12 +2489,12 @@ details label {
 .toggle-row strong {
   font-weight: 400;
   color: #bbc9dd;
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .settings-row p,
 .toggle-row p {
   color: #6e87a8;
-  font-size: 11px;
+  font-size: var(--text-12);
   line-height: 1.7;
   margin-top: 7px;
   max-width: 520px;
@@ -2546,7 +2546,7 @@ details label {
   background: #0a1423;
   color: #8fa8c4;
   border-radius: 5px;
-  font-size: 10px;
+  font-size: var(--text-12);
   word-break: break-all;
 }
 .notice {
@@ -2555,7 +2555,7 @@ details label {
   border: 1px solid #93a8c325;
   border-radius: 7px;
   color: #97abc8;
-  font-size: 11px;
+  font-size: var(--text-12);
   line-height: 1.8;
   margin: 21px 0;
 }
@@ -2567,11 +2567,11 @@ details label {
   color: #9cbab5;
 }
 .privacy-header h2 {
-  font-size: 23px;
+  font-size: var(--text-23);
   font-weight: 400;
 }
 .privacy-header p {
-  font-size: 11px;
+  font-size: var(--text-12);
   color: #738da7;
   margin-top: 6px;
 }
@@ -2585,7 +2585,7 @@ details label {
   margin-top: 25px;
 }
 .secret-section p {
-  font-size: 10px;
+  font-size: var(--text-12);
   color: #6f88a7;
   margin: 10px 0 16px;
 }
@@ -2597,7 +2597,7 @@ details label {
   max-width: 400px;
 }
 .inline-input button {
-  font-size: 10px;
+  font-size: var(--text-12);
   white-space: nowrap;
 }
 .backup-action {
@@ -2613,18 +2613,18 @@ details label {
   flex: 1;
 }
 .backup-action strong {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 400;
 }
 .backup-action p {
-  font-size: 11px;
+  font-size: var(--text-12);
   color: #7b8fab;
   line-height: 1.7;
   margin: 9px 0 17px;
 }
 .backup-action button {
   white-space: nowrap;
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .backup-row {
   display: flex;
@@ -2642,24 +2642,24 @@ details label {
   min-width: 0;
 }
 .backup-row strong {
-  font-size: 11px;
+  font-size: var(--text-12);
   font-weight: 500;
 }
 .backup-row p {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #7188a9;
   margin-top: 6px;
   overflow-wrap: anywhere;
 }
 .backup-row small {
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #557596;
   display: block;
   margin-top: 4px;
 }
 .backup-row button {
-  font-size: 9px;
+  font-size: var(--text-12);
   min-height: 28px;
   padding: 5px 8px;
 }
@@ -2670,7 +2670,7 @@ details label {
   margin: 25px 0;
 }
 .maintenance-actions button {
-  font-size: 10px;
+  font-size: var(--text-12);
 }
 .job-row {
   display: flex;
@@ -2700,21 +2700,21 @@ details label {
   min-width: 0;
 }
 .job-row strong {
-  font-size: 11px;
+  font-size: var(--text-12);
   font-weight: 400;
 }
 .job-row small {
   display: block;
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #6681a2;
   margin-top: 5px;
   overflow-wrap: anywhere;
 }
 .job-row .tag {
-  font-size: 9px;
+  font-size: var(--text-12);
 }
 .job-row button {
-  font-size: 10px;
+  font-size: var(--text-12);
 }
 .doctor-heading {
   display: flex;
@@ -2722,7 +2722,7 @@ details label {
   gap: 12px;
   color: #c6a17e;
   padding: 27px 0 18px;
-  font-size: 16px;
+  font-size: var(--text-16);
 }
 .doctor-heading.healthy {
   color: #99bbac;
@@ -2731,26 +2731,26 @@ details label {
   padding: 31px;
 }
 .onboarding > .eyebrow {
-  font-size: 8px;
+  font-size: var(--text-12);
   letter-spacing: 1.4px;
   color: #9a95bd;
 }
 .onboarding > h1 {
-  font-size: 42px;
+  font-size: var(--text-42);
   font-weight: 300;
   letter-spacing: -1.5px;
   margin: 16px 0 15px;
   line-height: 1.12;
 }
 .onboarding > p {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: #8da1be;
   margin: 14px 0 24px;
   max-width: 410px;
   line-height: 1.8;
 }
 .onboarding > label {
-  font-size: 10px;
+  font-size: var(--text-12);
   margin: 23px 0;
 }
 .onboarding-facts {
@@ -2770,25 +2770,25 @@ details label {
   margin-top: 3px;
 }
 .onboarding-facts strong {
-  font-size: 11px;
+  font-size: var(--text-12);
   font-weight: 500;
 }
 .onboarding-facts small {
   display: block;
   color: #7f96b7;
-  font-size: 10px;
+  font-size: var(--text-12);
   margin-top: 5px;
   line-height: 1.7;
 }
 .onboarding-facts code {
   display: block;
-  font-size: 9px;
+  font-size: var(--text-12);
   color: #6682a5;
   margin-top: 7px;
   overflow-wrap: anywhere;
 }
 .onboarding > p.small {
-  font-size: 9px;
+  font-size: var(--text-12);
   margin-bottom: 0;
   color: #5a789b;
 }
@@ -2810,12 +2810,12 @@ details label {
   margin-bottom: 14px;
 }
 .connection-screen h1 {
-  font-size: 34px;
+  font-size: var(--text-34);
   font-weight: 300;
 }
 .connection-screen p {
   max-width: 440px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: #839aba;
   line-height: 1.8;
 }
@@ -2844,7 +2844,7 @@ details label {
   padding: 11px 13px 11px 17px;
   box-shadow: 0 15px 50px #0005;
   max-width: min(90vw, 650px);
-  font-size: 11px;
+  font-size: var(--text-12);
   color: #b9d0ca;
   animation: toast-in 0.2s ease-out;
 }
@@ -2861,7 +2861,7 @@ details label {
   border: 1px solid #a2667547;
   color: #d8aab5;
   padding: 14px 17px;
-  font-size: 11px;
+  font-size: var(--text-12);
   line-height: 1.8;
   margin: 15px 20px;
   border-radius: 6px;
@@ -2872,7 +2872,7 @@ details label {
 }
 .error-text {
   color: #d5a2ad;
-  font-size: 11px;
+  font-size: var(--text-12);
   line-height: 1.7;
   margin-top: 10px;
 }
@@ -2888,7 +2888,7 @@ details label {
   border: 1px solid #8185b945;
   border-radius: 8px;
   z-index: 80;
-  font-size: 11px;
+  font-size: var(--text-12);
   color: #afbcdf;
 }
 .drop-overlay {
@@ -2908,17 +2908,17 @@ details label {
   color: #b9b5e7;
 }
 .drop-overlay h2 {
-  font-size: 35px;
+  font-size: var(--text-35);
   font-weight: 300;
 }
 .drop-overlay p {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: #8d9dc1;
 }
 .skeleton {
   padding: 25px;
   color: #7f95b5;
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .spin {
   animation: spin 1.4s linear infinite;
@@ -2973,16 +2973,16 @@ details label {
     top: 155px;
   }
   .brain-heading h1 {
-    font-size: 33px;
+    font-size: var(--text-33);
   }
   .graph-space {
     inset: 203px 0 0;
   }
   .graph-onboarding h2 {
-    font-size: 51px;
+    font-size: var(--text-51);
   }
   .graph-onboarding p {
-    font-size: 12px;
+    font-size: var(--text-12);
   }
   .inspector {
     width: 415px;
@@ -3003,17 +3003,17 @@ details label {
     gap: 7px;
   }
   .brand div {
-    font-size: 22px;
+    font-size: var(--text-22);
   }
   .brand span {
-    font-size: 6px;
+    font-size: var(--text-12);
     letter-spacing: 1.2px;
   }
   .brand img {
     width: 32px;
   }
   .sidebar nav button {
-    font-size: 11px;
+    font-size: var(--text-12);
     gap: 10px;
   }
   .sidebar nav button small {
@@ -3032,7 +3032,7 @@ details label {
     padding: 32px 29px 50px;
   }
   .section-title h1 {
-    font-size: 29px;
+    font-size: var(--text-29);
   }
   .section-title p {
     max-width: 300px;
@@ -3057,7 +3057,7 @@ details label {
     right: 16px;
   }
   .graph-hint {
-    font-size: 8px;
+    font-size: var(--text-12);
     max-width: 50%;
   }
   .graph-footer {
@@ -3065,7 +3065,7 @@ details label {
     right: 21px;
   }
   .graph-onboarding h2 {
-    font-size: 39px;
+    font-size: var(--text-39);
   }
   .project-list {
     grid-template-columns: 1fr;
@@ -3077,14 +3077,14 @@ details label {
     gap: 0;
   }
   .settings-tabs button {
-    font-size: 9px;
+    font-size: var(--text-12);
     padding: 7px 8px;
   }
   .backup-action {
     gap: 15px;
   }
   .backup-action button {
-    font-size: 10px;
+    font-size: var(--text-12);
   }
   .form-columns {
     gap: 12px;
@@ -3133,17 +3133,17 @@ details label {
     height: 44px;
   }
   .graph-onboarding h2 {
-    font-size: 36px;
+    font-size: var(--text-36);
     margin: 11px 0 15px;
   }
   .graph-onboarding p {
-    font-size: 10px;
+    font-size: var(--text-12);
   }
   .graph-onboarding button {
     margin-top: 18px;
   }
   .graph-onboarding .eyebrow {
-    font-size: 7px;
+    font-size: var(--text-12);
   }
   .entity-glyph {
     margin-bottom: 14px;
@@ -3155,13 +3155,13 @@ details label {
     padding-bottom: 16px;
   }
   .entity-heading h2 {
-    font-size: 23px;
+    font-size: var(--text-23);
   }
   .onboarding {
     padding: 25px;
   }
   .onboarding > h1 {
-    font-size: 35px;
+    font-size: var(--text-35);
   }
   .onboarding-facts {
     gap: 15px;
@@ -3221,7 +3221,7 @@ details label {
     height: 58px;
     min-height: 58px;
     padding: 0 13px;
-    font-size: 10px;
+    font-size: var(--text-12);
   }
   .topbar > div {
     gap: 8px;
@@ -3253,13 +3253,13 @@ details label {
     top: 29px;
   }
   .brain-heading h1 {
-    font-size: 25px;
+    font-size: var(--text-25);
   }
   .brain-heading p {
-    font-size: 9px;
+    font-size: var(--text-12);
   }
   .brain-heading .eyebrow {
-    font-size: 7px;
+    font-size: var(--text-12);
   }
   .brain-toolbar {
     left: 20px;
@@ -3271,7 +3271,7 @@ details label {
     gap: 0;
   }
   .cluster-filters button {
-    font-size: 9px;
+    font-size: var(--text-12);
     padding: 5px 8px;
   }
   .graph-space {
@@ -3290,16 +3290,16 @@ details label {
     padding: 3px;
   }
   .graph-onboarding h2 {
-    font-size: 34px;
+    font-size: var(--text-34);
   }
   .graph-onboarding p {
-    font-size: 10px;
+    font-size: var(--text-12);
     max-width: 260px;
     padding: 0 15px;
   }
   .graph-onboarding .eyebrow {
     max-width: 240px;
-    font-size: 7px;
+    font-size: var(--text-12);
     letter-spacing: 1px;
   }
   .graph-onboarding .orbit-symbol {
@@ -3308,7 +3308,7 @@ details label {
     height: 70px;
   }
   .graph-onboarding button {
-    font-size: 9px;
+    font-size: var(--text-12);
     padding: 9px 10px;
     gap: 7px;
   }
@@ -3323,19 +3323,19 @@ details label {
     margin-bottom: 25px;
   }
   .section-title h1 {
-    font-size: 26px;
+    font-size: var(--text-26);
   }
   .section-title p {
-    font-size: 10px;
+    font-size: var(--text-12);
   }
   .section-title .eyebrow {
-    font-size: 7px;
+    font-size: var(--text-12);
   }
   .section-actions {
     margin-top: 17px;
   }
   .section-actions button {
-    font-size: 10px;
+    font-size: var(--text-12);
   }
   .filter-bar span {
     display: none;
@@ -3345,16 +3345,16 @@ details label {
     padding: 20px 0;
   }
   .memory-row h3 {
-    font-size: 12px;
+    font-size: var(--text-12);
   }
   .memory-row > svg {
     display: none;
   }
   .memory-row-end small {
-    font-size: 8px;
+    font-size: var(--text-12);
   }
   .memory-row .tag {
-    font-size: 8px;
+    font-size: var(--text-12);
   }
   .memory-row-end {
     gap: 9px;
@@ -3363,14 +3363,14 @@ details label {
     display: none;
   }
   .row-eyebrow {
-    font-size: 7px;
+    font-size: var(--text-12);
   }
   .project-item {
     padding: 20px;
     min-height: 155px;
   }
   .project-item h3 {
-    font-size: 20px;
+    font-size: var(--text-20);
   }
   .project-item .memory-row-end {
     left: 20px;
@@ -3381,16 +3381,16 @@ details label {
     gap: 10px;
   }
   .search-hero input {
-    font-size: 13px;
+    font-size: var(--text-13);
   }
   .search-help {
-    font-size: 8px;
+    font-size: var(--text-12);
   }
   .search-help button {
-    font-size: 8px;
+    font-size: var(--text-12);
   }
   .results-heading {
-    font-size: 8px;
+    font-size: var(--text-12);
     gap: 10px;
   }
   .search-result-footer {
@@ -3399,31 +3399,31 @@ details label {
     gap: 9px;
   }
   .search-result p {
-    font-size: 11px;
+    font-size: var(--text-12);
   }
   .search-result h3 {
-    font-size: 15px;
+    font-size: var(--text-15);
   }
   .timeline-filter {
     gap: 10px;
   }
   .timeline-filter label {
     width: 50%;
-    font-size: 9px;
+    font-size: var(--text-12);
   }
   .timeline-event {
     gap: 13px;
     padding-left: 18px;
   }
   .timeline-event time {
-    font-size: 8px;
+    font-size: var(--text-12);
     width: 38px;
   }
   .timeline-event h4 {
-    font-size: 12px;
+    font-size: var(--text-12);
   }
   .timeline-event p {
-    font-size: 9px;
+    font-size: var(--text-12);
   }
   .timeline-event > svg {
     display: none;
@@ -3441,23 +3441,23 @@ details label {
   }
   .task-capture-details button {
     width: 100%;
-    font-size: 10px;
+    font-size: var(--text-12);
   }
   .task-row {
     gap: 12px;
   }
   .task-row h3 {
-    font-size: 12px;
+    font-size: var(--text-12);
   }
   .task-row select {
     width: 72px;
-    font-size: 9px;
+    font-size: var(--text-12);
   }
   .task-tabs {
     gap: 0;
   }
   .tabs > button {
-    font-size: 9px;
+    font-size: var(--text-12);
     padding: 12px 9px;
   }
   .import-zone {
@@ -3468,10 +3468,10 @@ details label {
     display: none;
   }
   .import-zone strong {
-    font-size: 12px;
+    font-size: var(--text-12);
   }
   .import-zone p {
-    font-size: 9px;
+    font-size: var(--text-12);
   }
   .source-row {
     gap: 12px;
@@ -3480,19 +3480,19 @@ details label {
   .file-extension {
     width: 32px;
     height: 39px;
-    font-size: 8px;
+    font-size: var(--text-12);
   }
   .source-main h3 {
-    font-size: 12px;
+    font-size: var(--text-12);
   }
   .source-main p {
-    font-size: 8px;
+    font-size: var(--text-12);
   }
   .source-link {
-    font-size: 9px;
+    font-size: var(--text-12);
   }
   .source-main code {
-    font-size: 7px;
+    font-size: var(--text-12);
   }
   .inspector {
     top: 69px;
@@ -3519,13 +3519,13 @@ details label {
     display: none;
   }
   .entity-heading h2 {
-    font-size: 23px;
+    font-size: var(--text-23);
   }
   .inspector .tabs button {
-    font-size: 10px;
+    font-size: var(--text-12);
   }
   .settings-section > h2 {
-    font-size: 20px;
+    font-size: var(--text-20);
   }
   .settings-tabs {
     margin-bottom: 22px;
@@ -3552,11 +3552,11 @@ details label {
   }
   .settings-row p,
   .toggle-row p {
-    font-size: 10px;
+    font-size: var(--text-12);
   }
   .settings-row strong,
   .toggle-row strong {
-    font-size: 11px;
+    font-size: var(--text-12);
   }
   .inline-input {
     flex-direction: column;
@@ -3572,11 +3572,11 @@ details label {
     gap: 10px;
   }
   .modal-footer .muted {
-    font-size: 8px;
+    font-size: var(--text-12);
     max-width: 55%;
   }
   .modal-footer button {
-    font-size: 10px;
+    font-size: var(--text-12);
   }
   .editor-layout {
     grid-template-columns: 1fr;
@@ -3611,7 +3611,7 @@ details label {
     margin: 5px 0;
   }
   .title-input {
-    font-size: 23px;
+    font-size: var(--text-23);
   }
   .property-note {
     display: none;
@@ -3620,10 +3620,10 @@ details label {
     padding: 24px;
   }
   .onboarding > h1 {
-    font-size: 34px;
+    font-size: var(--text-34);
   }
   .onboarding > p {
-    font-size: 11px;
+    font-size: var(--text-12);
   }
   .onboarding-facts {
     gap: 16px;
@@ -3635,22 +3635,22 @@ details label {
     padding: 20px;
   }
   .capture-body textarea {
-    font-size: 13px;
+    font-size: var(--text-13);
   }
   .empty {
     padding: 40px 5px;
   }
   .empty h3 {
-    font-size: 17px;
+    font-size: var(--text-17);
   }
   .empty p {
-    font-size: 11px;
+    font-size: var(--text-12);
   }
   .inbox-item h3 {
-    font-size: 12px;
+    font-size: var(--text-12);
   }
   .inbox-actions button {
-    font-size: 8px;
+    font-size: var(--text-12);
     min-height: 27px;
     padding: 5px 7px;
   }
@@ -3658,33 +3658,33 @@ details label {
     bottom: 15px;
     padding: 9px 11px;
     max-width: 93vw;
-    font-size: 10px;
+    font-size: var(--text-12);
   }
   .palette-input {
     padding: 13px 18px;
   }
   .palette-input input {
-    font-size: 13px;
+    font-size: var(--text-13);
   }
   .palette-results button {
-    font-size: 11px;
+    font-size: var(--text-12);
     gap: 8px;
   }
   .palette-footer {
-    font-size: 8px;
+    font-size: var(--text-12);
   }
   .graph-page {
     left: 18px;
-    font-size: 8px;
+    font-size: var(--text-12);
   }
   .graph-page button {
-    font-size: 8px;
+    font-size: var(--text-12);
   }
   .return-present {
     top: 114px;
     left: 23px;
     right: auto;
-    font-size: 8px;
+    font-size: var(--text-12);
     padding: 4px 7px;
     min-height: 24px;
   }
@@ -3733,19 +3733,19 @@ html[data-reduced-motion='true'] *:before {
 }
 .desktop-brain-options .storage-path {
   overflow-wrap: anywhere;
-  font-size: 11px;
+  font-size: var(--text-12);
   margin-bottom: 12px;
 }
 .desktop-local-note {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .desktop-version {
   display: block;
   margin-top: 28px;
-  font-size: 11px;
+  font-size: var(--text-12);
 }
 .desktop-inline-actions {
   display: flex;
@@ -3797,6 +3797,51 @@ html[data-desktop-capture='true'] .capture-body textarea {
   margin: 4px 0;
 }
 .memory-option span {
-  font-size: 11px;
+  font-size: var(--text-12);
   opacity: 0.7;
+}
+
+.graph-legend {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  max-width: min(340px, calc(100% - 36px));
+  max-height: 40%;
+  overflow: auto;
+  padding: 10px 14px;
+  background: #0b1422e8;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: var(--text-12);
+}
+.graph-legend summary {
+  cursor: pointer;
+  color: var(--bright);
+}
+.graph-legend p {
+  margin: 8px 0;
+}
+.graph-legend i {
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.graph-controls {
+  flex-wrap: wrap;
+}
+.graph-footer {
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.settings-tabs {
+  flex-wrap: wrap;
+}
+.settings-row,
+.form-stack label {
+  min-width: 0;
+}
+.evidence-item {
+  overflow-wrap: anywhere;
 }

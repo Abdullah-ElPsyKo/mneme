@@ -11,3 +11,39 @@
   --mono: 'Cascadia Code', 'Consolas', monospace;
   color-scheme: dark;
 }
+
+:root {
+  --text-scale: 1;
+  --text-13: calc(13px * var(--text-scale));
+  --text-12: calc(12px * var(--text-scale));
+  --text-35: calc(35px * var(--text-scale));
+  --text-23: calc(23px * var(--text-scale));
+  --text-14: calc(14px * var(--text-scale));
+  --text-24: calc(24px * var(--text-scale));
+  --text-28: calc(28px * var(--text-scale));
+  --text-18: calc(18px * var(--text-scale));
+  --text-45: calc(45px * var(--text-scale));
+  --text-32: calc(32px * var(--text-scale));
+  --text-21: calc(21px * var(--text-scale));
+  --text-19: calc(19px * var(--text-scale));
+  --text-17: calc(17px * var(--text-scale));
+  --text-15: calc(15px * var(--text-scale));
+  --text-25: calc(25px * var(--text-scale));
+  --text-16: calc(16px * var(--text-scale));
+  --text-42: calc(42px * var(--text-scale));
+  --text-34: calc(34px * var(--text-scale));
+  --text-33: calc(33px * var(--text-scale));
+  --text-51: calc(51px * var(--text-scale));
+  --text-22: calc(22px * var(--text-scale));
+  --text-29: calc(29px * var(--text-scale));
+  --text-39: calc(39px * var(--text-scale));
+  --text-36: calc(36px * var(--text-scale));
+  --text-26: calc(26px * var(--text-scale));
+  --text-20: calc(20px * var(--text-scale));
+}
+:root[data-text-size='compact'] {
+  --text-scale: 0.93;
+}
+:root[data-text-size='large'] {
+  --text-scale: 1.16;
+}

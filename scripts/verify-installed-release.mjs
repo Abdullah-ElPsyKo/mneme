@@ -22,11 +22,14 @@ const child = spawn(join(install, 'mneme-core.exe'), [join(install, 'core/dist/s
   stdio: ['pipe', 'pipe', 'pipe'],
 });
 const exited = once(child, 'exit');
-child.stderr.resume();
+let startupError = '';
+child.stderr.on('data', (chunk) => {
+  startupError = (startupError + chunk.toString()).slice(-6000);
+});
 const lines = createInterface({ input: child.stdout });
 const startup = new Promise((resolveReady, reject) => {
   child.once('error', reject);
-  child.once('exit', (code) => reject(new Error(`Core exited before readiness (${code})`)));
+  child.once('exit', (code) => reject(new Error(`Core exited before readiness (${code}): ${startupError}`)));
   lines.on('line', (line) => {
     try {
       const message = JSON.parse(line);
@@ -68,6 +71,30 @@ try {
   assert.equal((await call('/memories?type=project&project_state=abandoned'))[0].id, id);
   assert.deepEqual(await call('/memories/' + note.id), note);
   assert.equal((await call('/events?aggregate=' + id)).length, 2);
+  if (version === '0.3.1') {
+    const { key_configured, key_storage, ...settings } = await call('/settings');
+    assert.equal(settings.text_size, 'default');
+    assert.equal(settings.graph_labels, true);
+    await call('/settings', 'PUT', { ...settings, text_size: 'large', graph_labels: false });
+    assert.equal((await call('/settings')).text_size, 'large');
+    assert.equal((await call('/settings')).graph_labels, false);
+    assert.equal(
+      (await call('/context', 'POST', { query: 'What tasks do I have?' })).context.evidence.length,
+      0,
+    );
+    const task = await call('/tasks', 'POST', {
+      title: 'Verify installed task retrieval',
+      project: 'Release fixture',
+    });
+    const answer = await call('/ask', 'POST', { query: 'What tasks do I have?' });
+    assert.ok(answer.context.evidence.some((e) => e.task_id === task.id && e.status === 'open'));
+    assert.equal((await call('/ask/history'))[0].evidence[0].task_id, task.id);
+    const entity = await call('/entities', 'POST', { name: 'Release fixture', type: 'custom_fixture' });
+    assert.equal(entity.type, 'custom_fixture');
+    console.log(
+      'Installed 0.3.1 preferences, custom entities, empty task context and persisted task evidence passed.',
+    );
+  }
   assert.equal((await call('/doctor?deep=true')).ok, true);
   child.stdin.write(JSON.stringify({ type: 'shutdown' }) + '\n');
   const [code] = await exited;

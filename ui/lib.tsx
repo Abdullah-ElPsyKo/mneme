@@ -38,6 +38,11 @@ export const color = (type: string) =>
     concept: '#70bdb9',
     goal: '#cda18a',
     device: '#85a6b9',
+    person: '#d3ab89',
+    organization: '#a5ba88',
+    technology: '#879ddb',
+    software: '#82c8c0',
+    location: '#c79bbb',
   })[type] || '#95abc5';
 export function Markdown({ text }: { text: string }) {
   const html = DOMPurify.sanitize(marked.parse(text, { async: false }) as string, {

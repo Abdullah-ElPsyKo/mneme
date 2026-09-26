@@ -7,6 +7,7 @@ type Node = {
   name: string;
   type: string;
   importance?: number;
+  memory_id?: string | null;
   provenance: any;
   x: number;
   y: number;
@@ -24,7 +25,13 @@ export function Graph({
   onCluster,
   reducedMotion,
   onCapture,
+  showLabels,
+  onLabelsChange,
+  textSize,
 }: {
+  showLabels: boolean;
+  onLabelsChange: (show: boolean) => void;
+  textSize: string;
   data: any;
   selected?: string;
   highlights: string[];
@@ -78,6 +85,22 @@ export function Graph({
         }
     return { nodes, clusters, map: new Map(nodes.map((n) => [n.id, n])) };
   }, [data]);
+  const edgeTypes = useMemo(
+    () => [...new Set<string>((data.relationships || []).map((r: any) => r.type))].sort(),
+    [data],
+  );
+  const edgeColor = (type: string) => {
+    // Stable per stored label, not per edge. Labels remain descriptive and user-defined.
+    const known: Record<string, string> = {
+      related_to: '#94a8c6',
+      depends_on: '#e5b873',
+      supports: '#7ecab7',
+      part_of: '#b5a0e7',
+      uses: '#78b9de',
+      references: '#94a8c6',
+    };
+    return known[type] || '#a0afbf';
+  };
   const neighbors = useMemo(() => {
     const ids = new Set<string>(selected ? [selected] : []);
     for (const r of data.relationships || []) {
@@ -101,6 +124,16 @@ export function Graph({
         y: h / 2 + (y - cam.y) * cam.zoom,
       });
       const overview = cam.zoom < 0.55;
+      const scale = textSize === 'large' ? 1.16 : textSize === 'compact' ? 0.93 : 1;
+      // Quiet technical depth; only redrawn on interaction, no idle animation loop.
+      ctx.strokeStyle = '#718ba310';
+      ctx.lineWidth = 1;
+      for (const radius of [110, 230, 350]) {
+        const center = world(0, 0);
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, radius * cam.zoom, 0, Math.PI * 2);
+        ctx.stroke();
+      }
       for (const group of layout.clusters) {
         const p = world(group.x, group.y);
         const r = overview ? 33 : 135 * cam.zoom;
@@ -141,7 +174,8 @@ export function Graph({
           to = world(b.x, b.y),
           active = selected && (a.id === selected || b.id === selected),
           retrieved = highlights.includes(a.id) && highlights.includes(b.id);
-        ctx.strokeStyle = active ? '#a3bcd699' : retrieved ? '#c3baff99' : '#60759038';
+        const tint = edgeColor(edge.type);
+        ctx.strokeStyle = tint + (active || retrieved ? 'dd' : layout.nodes.length > 100 ? '30' : '60');
         ctx.lineWidth = active || retrieved ? 1.4 : 0.8;
         ctx.globalAlpha = selected && !active ? 0.2 : 1;
         ctx.setLineDash(edge.provenance?.kind === 'derived' || edge.provenance?.kind === 'ai' ? [4, 4] : []);
@@ -150,15 +184,30 @@ export function Graph({
         ctx.lineTo(to.x, to.y);
         ctx.stroke();
         ctx.setLineDash([]);
+        if (active || cam.zoom > 1.4) {
+          const angle = Math.atan2(to.y - from.y, to.x - from.x),
+            x = to.x - Math.cos(angle) * 12,
+            y = to.y - Math.sin(angle) * 12;
+          ctx.beginPath();
+          ctx.moveTo(x - Math.cos(angle - 0.5) * 6, y - Math.sin(angle - 0.5) * 6);
+          ctx.lineTo(x, y);
+          ctx.lineTo(x - Math.cos(angle + 0.5) * 6, y - Math.sin(angle + 0.5) * 6);
+          ctx.stroke();
+        }
         if ((active && cam.zoom > 1.15) || cam.zoom > 2.1) {
           ctx.fillStyle = '#97a6bd';
-          ctx.font = '10px Segoe UI';
+          ctx.font = `${12 * scale}px Segoe UI`;
+          ctx.strokeStyle = '#090f1a';
+          ctx.lineWidth = 4;
           ctx.textAlign = 'center';
+          ctx.strokeText(pretty(edge.type), (from.x + to.x) / 2, (from.y + to.y) / 2 - 5);
           ctx.fillText(pretty(edge.type), (from.x + to.x) / 2, (from.y + to.y) / 2 - 5);
         }
       }
       ctx.globalAlpha = 1;
       const occupied: { x: number; y: number; width: number }[] = [];
+      const labelBudget = Math.max(12, Math.floor((w * h) / (14000 * scale)));
+
       const sorted = [...layout.nodes].sort(
         (a, b) =>
           Number(b.id === selected) - Number(a.id === selected) ||
@@ -187,7 +236,8 @@ export function Graph({
           ctx.lineTo(p.x, p.y + r);
           ctx.lineTo(p.x - r, p.y);
           ctx.closePath();
-        } else ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        } else if (!node.memory_id) ctx.rect(p.x - r, p.y - r, r * 2, r * 2);
+        else ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
         if (active || found) {
@@ -197,16 +247,26 @@ export function Graph({
           ctx.arc(p.x, p.y, r + (active ? 8 : 5), 0, Math.PI * 2);
           ctx.stroke();
         }
-        ctx.font = `${active ? '600' : '400'} ${active ? 13 : 11}px Segoe UI, sans-serif`;
+        ctx.font = `${active ? '600' : '400'} ${(active ? 14 : 12) * scale}px Segoe UI, sans-serif`;
         ctx.textAlign = 'left';
         const label = node.name.length > 28 && !active ? node.name.slice(0, 27) + '…' : node.name;
         const width = ctx.measureText(label).width,
           x = p.x + r + 9,
           y = p.y + 4;
         const collision = occupied.some(
-          (o) => Math.abs(o.y - y) < 18 && o.x < x + width && o.x + o.width > x,
+          (o) => Math.abs(o.y - y) < 20 * scale && o.x < x + width && o.x + o.width > x,
         );
-        if (active || hovering || (!collision && (cam.zoom > 0.8 || found || node.type === 'project'))) {
+        if (
+          showLabels &&
+          (active ||
+            hovering ||
+            (!collision &&
+              occupied.length < labelBudget &&
+              (cam.zoom > 0.8 || found || node.type === 'project')))
+        ) {
+          ctx.strokeStyle = '#090f1a';
+          ctx.lineWidth = 4;
+          ctx.strokeText(label, x, y);
           ctx.fillStyle = active ? '#f2efff' : '#bdc9da';
           ctx.fillText(label, x, y);
           occupied.push({ x, y, width });
@@ -218,7 +278,7 @@ export function Graph({
       if (desktopIsVisible()) draw();
     };
     drawRef.current();
-  }, [layout, data, selected, highlights, neighbors]);
+  }, [layout, data, selected, highlights, neighbors, showLabels, textSize]);
   useEffect(() => {
     const observer = new ResizeObserver((entries) => {
       const { width: w, height: h } = entries[0].contentRect;
@@ -372,6 +432,18 @@ export function Graph({
           </button>
         </div>
       )}
+      <details className="graph-legend">
+        <summary>Graph key</summary>
+        <p>Circles: memories · squares: entities · diamonds: AI/derived</p>
+        <p>Node color: type · arrows: stored direction · dashed: AI/derived links</p>
+        {edgeTypes.map((type) => (
+          <div key={type}>
+            <i style={{ background: edgeColor(type) }} />
+            {pretty(type)}
+          </div>
+        ))}
+        <small>Connection labels are user-defined. Other labels share a neutral color.</small>
+      </details>
       <div className="graph-footer">
         <div className="graph-hint">
           {hover ? (
@@ -390,6 +462,13 @@ export function Graph({
           )}
         </div>
         <div className="graph-controls">
+          <button
+            aria-label="Show memory and entity names"
+            aria-pressed={showLabels}
+            onClick={() => onLabelsChange(!showLabels)}
+          >
+            Names {showLabels ? 'on' : 'off'}
+          </button>
           <button
             className="icon-button"
             title="Accessible entity list"

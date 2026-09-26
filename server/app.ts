@@ -1,3 +1,4 @@
+import { taskEvidence } from './retrieval/structured.js';
 import { existsSync, readFileSync, mkdirSync, realpathSync, statSync, appendFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { Storage } from './storage/database.js';
@@ -199,7 +200,13 @@ export class Brain {
       (h) => !superseded.has(h.memory.id) && h.memory.status !== 'archived' && !h.memory.private,
     );
     const selected = selectEvidence(query, eligible);
-    const context = compileContext(query, selected.hits, budget, superseded);
+    const context = compileContext(
+      query,
+      selected.hits,
+      budget,
+      superseded,
+      taskEvidence(this.storage, query),
+    );
     context.omitted.push(
       ...selected.omitted,
       ...hits
